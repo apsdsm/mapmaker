@@ -1,0 +1,7 @@
+name: Annotated makelist
+desc: makefile for entities in the annotated map
+include:
+  - ../entities/key.key.yaml
+  - ../entities/mob.mob.yaml
+  - ../entities/mob_prot.mob.yaml
+  - ../entities/door.door.yaml

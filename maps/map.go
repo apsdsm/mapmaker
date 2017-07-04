@@ -14,28 +14,28 @@
 
 package maps
 
-// A Tile is a single tile in a map
-type Tile struct {
-	Rune rune
-}
+import "github.com/apsdsm/mapmaker/placeholders"
 
 // A Map contains a grid of tiles
 type Map struct {
-	Width, Height int
-	Grid          [][]Tile
+	Width, Height    int
+	Link, Name, Desc string
+	Tiles            [][]Tile
+	Doors            []placeholders.Door
+	Keys             []placeholders.Key
+	Mobs             []placeholders.Mob
 }
 
 // NewMap generates a new map initialized to the specified size
 func NewMap(width, height int) *Map {
-
 	m := Map{}
 
 	m.Width = width
 	m.Height = height
-	m.Grid = make([][]Tile, width)
+	m.Tiles = make([][]Tile, width)
 
-	for i := range m.Grid {
-		m.Grid[i] = make([]Tile, height)
+	for i := range m.Tiles {
+		m.Tiles[i] = make([]Tile, height)
 	}
 
 	return &m

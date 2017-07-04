@@ -1,0 +1,9 @@
+map_name: Prison
+map_link: prison
+include_fles:
+  - ./prison.map
+  - ./prison/general.mob.yaml
+  - ./prison/soldier1.mob.yaml
+  - ./prison/lobby.door.yaml
+  - ./prison/outside.door.yaml
+  - ./prison/outside.key.yaml

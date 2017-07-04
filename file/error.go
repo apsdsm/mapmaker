@@ -12,26 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps_test
+package file
 
-import (
-	"github.com/apsdsm/mapmaker/maps"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-)
+// Error holds data about errors encountered during the map import process
+type Error struct {
 
-var _ = Describe("Map", func() {
+	// error message
+	Message string
 
-	It("makes a new map with specified width and height", func() {
-		m := maps.NewMap(10, 5)
+	// line number where error was collected
+	LineNumber int
 
-		Expect(m.Width).To(Equal(10))
-		Expect(m.Height).To(Equal(5))
-
-		Expect(len(m.Tiles)).To(Equal(10))
-
-		for i := range m.Tiles {
-			Expect(len(m.Tiles[i])).To(Equal(5))
-		}
-	})
-})
+	// true if this is only a warning
+	isWarning bool
+}

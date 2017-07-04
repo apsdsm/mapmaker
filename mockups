@@ -1,0 +1,18 @@
++-[Map]-------------------------+-[Entity]--------+-[Events]---------------------------+
+|    ###############            | s : [soldier]   |  [talk]                            |
+|    #  V          #            |                 |  s: Arg! I sweet death's embrace!  |
+|    #      [s]    #            | [inventory]     |  V: Serves you right!              |
+|    ###############            | gold [2]        |                                    | 
+|                               |                 |
+|                               | [events]        |
+|                               | death [talk]    |
+|                               | 
+|                               | 
+|                               | 
++-[Tiles]-[Entities]------------+---------+
+| # $ . o  <- list of usable tiles
++-------------------------------
+| # <- info about selected tile
++--------------------------------
+| [,] prev [.] next [d]raw [e]dit [q]uit [s]ave <- menu
++--------------------------------

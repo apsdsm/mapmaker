@@ -12,26 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps_test
+package file
 
 import (
+	"encoding/json"
+	"io/ioutil"
+
 	"github.com/apsdsm/mapmaker/maps"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Map", func() {
-
-	It("makes a new map with specified width and height", func() {
-		m := maps.NewMap(10, 5)
-
-		Expect(m.Width).To(Equal(10))
-		Expect(m.Height).To(Equal(5))
-
-		Expect(len(m.Tiles)).To(Equal(10))
-
-		for i := range m.Tiles {
-			Expect(len(m.Tiles[i])).To(Equal(5))
-		}
-	})
-})
+// Write will output a map as a file
+func Write(m *maps.Map, path string) {
+	marshalled, _ := json.Marshal(m)
+	ioutil.WriteFile(path, marshalled, 0664)
+}

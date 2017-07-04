@@ -1,0 +1,4 @@
+link: general
+prot: soldier
+loot: [outside_key]
+on_die: general_ondie

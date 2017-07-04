@@ -1,0 +1,17 @@
+{
+    "Name": "Simple Tile Set",
+    "Tiles": [
+        {
+            "Rune": "#",
+            "Walkable": false,
+            "FG": "white",
+            "BG": "black"
+        },
+        {
+            "Rune": " ",
+            "Walkable": true,
+            "FG": "white",
+            "BG": "black"
+        }
+    ]
+}

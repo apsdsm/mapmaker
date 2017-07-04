@@ -12,26 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps_test
+package placeholders
 
-import (
-	"github.com/apsdsm/mapmaker/maps"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-)
+// Key is a placeholder for key entities in a level
+type Key struct {
 
-var _ = Describe("Map", func() {
+	// displayed name
+	Name string
 
-	It("makes a new map with specified width and height", func() {
-		m := maps.NewMap(10, 5)
+	// physical name
+	Link string
 
-		Expect(m.Width).To(Equal(10))
-		Expect(m.Height).To(Equal(5))
-
-		Expect(len(m.Tiles)).To(Equal(10))
-
-		for i := range m.Tiles {
-			Expect(len(m.Tiles[i])).To(Equal(5))
-		}
-	})
-})
+	// description
+	Desc string
+}

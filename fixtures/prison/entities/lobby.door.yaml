@@ -1,0 +1,3 @@
+link: lobby
+lock: true
+on_try: lobbydoor_ontry

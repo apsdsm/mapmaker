@@ -1,0 +1,5 @@
+link: soldier1
+prot: soldier
+loot: [vgold:1, vcopper:12]
+path: [s1, s2, s3, s4]
+on_die: soldier1_ondie

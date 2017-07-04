@@ -1,0 +1,9 @@
+name: Mob Name
+loot:
+  - copper:1-10
+
+# movement
+
+# events
+on_die: mob_on_die.script
+on_notice: mob_on_notice.script

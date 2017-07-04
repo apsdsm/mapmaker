@@ -12,26 +12,9 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps_test
+package placeholders
 
-import (
-	"github.com/apsdsm/mapmaker/maps"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-)
-
-var _ = Describe("Map", func() {
-
-	It("makes a new map with specified width and height", func() {
-		m := maps.NewMap(10, 5)
-
-		Expect(m.Width).To(Equal(10))
-		Expect(m.Height).To(Equal(5))
-
-		Expect(len(m.Tiles)).To(Equal(10))
-
-		for i := range m.Tiles {
-			Expect(len(m.Tiles[i])).To(Equal(5))
-		}
-	})
-})
+// Position represents a single XY coord on the map
+type Position struct {
+	X, Y int
+}

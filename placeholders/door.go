@@ -12,26 +12,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps_test
+package placeholders
 
-import (
-	"github.com/apsdsm/mapmaker/maps"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-)
+// Door is a placeholder for door entities in a level
+type Door struct {
 
-var _ = Describe("Map", func() {
+	// physical name
+	Link string
 
-	It("makes a new map with specified width and height", func() {
-		m := maps.NewMap(10, 5)
+	// true if door is locked
+	Locked bool
 
-		Expect(m.Width).To(Equal(10))
-		Expect(m.Height).To(Equal(5))
+	// link to key that unlocks/locks door
+	Key string
 
-		Expect(len(m.Tiles)).To(Equal(10))
+	// events
+	OnTry string
+}
 
-		for i := range m.Tiles {
-			Expect(len(m.Tiles[i])).To(Equal(5))
-		}
-	})
-})
+// NeedsKey returns true if the door requires a key
+func (d *Door) NeedsKey() bool {
+	return d.Key != ""
+}

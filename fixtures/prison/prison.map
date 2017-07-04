@@ -1,0 +1,20 @@
+---
+link: prison
+name: Prison
+---
+
+################
+# v d          # // d:open
+#####          #
+#   d          # // d:locked
+#####          #####
+#   w         e w  # // w:s1 e:soldier1 w:s2
+#   w           w  # // w:s3 w:s4
+############d####### // d:lobby (unlocks after soldier1 dies)
+ △         # #    △
+        △  # #
+    △     ##d#### // d:unlocked
+          #     #
+          #   e #    △ // e:general
+   △      ###d###
+             t // t:step_outside

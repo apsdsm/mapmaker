@@ -12,26 +12,26 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps_test
+package placeholders
 
-import (
-	"github.com/apsdsm/mapmaker/maps"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-)
+// Map is a placeholder for layout data in a .map file
+type Map struct {
+	Height, Width int
+	Grid          [][]*Cell
+	StartPosition *Position
+}
 
-var _ = Describe("Map", func() {
+// NewMap returns an initialized map placeholder
+func NewMap(height, width int) *Map {
+	m := Map{
+		Width:  width,
+		Height: height,
+		Grid:   make([][]*Cell, width),
+	}
 
-	It("makes a new map with specified width and height", func() {
-		m := maps.NewMap(10, 5)
+	for i := 0; i < width; i++ {
+		m.Grid[i] = make([]*Cell, height)
+	}
 
-		Expect(m.Width).To(Equal(10))
-		Expect(m.Height).To(Equal(5))
-
-		Expect(len(m.Tiles)).To(Equal(10))
-
-		for i := range m.Tiles {
-			Expect(len(m.Tiles[i])).To(Equal(5))
-		}
-	})
-})
+	return &m
+}
