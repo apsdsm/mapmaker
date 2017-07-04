@@ -20,7 +20,7 @@ var _ = Describe("MapImporter", func() {
 	It("loads the metadata at the top of a map file into a placeholder", func() {
 		source := "../fixtures/maps/meta_only.map"
 
-		meta, _ := file.ImportPlaceholders(source)
+		meta, _ := file.ImportMap(source)
 
 		Expect(meta.Link).To(Equal("prison"))
 		Expect(meta.Name).To(Equal("The Jovian Prison"))
@@ -30,7 +30,7 @@ var _ = Describe("MapImporter", func() {
 	It("loads the dungeon after metadata into a placeholder", func() {
 		source := "../fixtures/maps/meta_and_map.map"
 
-		_, level := file.ImportPlaceholders(source)
+		_, level := file.ImportMap(source)
 
 		Expect(level.Width).To(Equal(3))
 		Expect(level.Height).To(Equal(3))
@@ -41,7 +41,7 @@ var _ = Describe("MapImporter", func() {
 	It("loads the metadata after each line of map content", func() {
 		source := "../fixtures/maps/meta_and_annotated_map.map"
 
-		_, level := file.ImportPlaceholders(source)
+		_, level := file.ImportMap(source)
 
 		Expect(level.Width).To(Equal(8), "width should be 8")
 		Expect(level.Height).To(Equal(5), "height should be 4")
@@ -61,7 +61,7 @@ var _ = Describe("MapImporter", func() {
 	It("assigns a start position if it finds one", func() {
 		source := "../fixtures/maps/meta_and_annotated_map.map"
 
-		_, dungeon := file.ImportPlaceholders(source)
+		_, dungeon := file.ImportMap(source)
 
 		Expect(dungeon.StartPosition).ToNot(BeNil())
 
@@ -72,7 +72,7 @@ var _ = Describe("MapImporter", func() {
 	It("sets the rune value to ' ' if cell contains entity", func() {
 		source := "../fixtures/maps/meta_and_annotated_map.map"
 
-		_, dungeon := file.ImportPlaceholders(source)
+		_, dungeon := file.ImportMap(source)
 
 		// start position
 		Expect(dungeon.Grid[4][3].Rune).To(Equal(' '))

@@ -5,8 +5,8 @@ import (
 	"github.com/apsdsm/mapmaker/placeholders"
 )
 
-// ConvertPlaceholdersToMap converts placeholder information to a map file that can be saved as json
-func ConvertPlaceholdersToMap(metaData *placeholders.Meta, mapData *placeholders.Map, entities *placeholders.EntityCollection) *maps.Map {
+// CompileLevel converts placeholder information to a map file that can be saved as json
+func CompileLevel(metaData *placeholders.Meta, mapData *placeholders.Map, entities *placeholders.EntityCollection) *maps.Map {
 	m := maps.NewMap(mapData.Width, mapData.Height)
 
 	for x := 0; x < mapData.Width; x++ {

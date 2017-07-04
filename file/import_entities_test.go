@@ -53,7 +53,7 @@ var _ = Describe("EntityImporter", func() {
 	It("loads individual referenced entity files from make list", func() {
 		source := "../fixtures/makelists/basic.yaml"
 
-		entities := file.ImportEntitiesFromMakeList(source)
+		entities := file.ImportEntities(source)
 
 		Expect(len(entities.Keys)).To(Equal(1))
 		Expect(entities.Keys[0].Link).To(Equal("normal_key"))

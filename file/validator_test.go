@@ -15,7 +15,7 @@ var _ = Describe("MapValidator", func() {
 			It("returns error if mob is referenced but doesn't exist", func() {
 				source := "../fixtures/maps/map_with_one_mob.map"
 
-				meta, dungeon := file.ImportPlaceholders(source)
+				meta, dungeon := file.ImportMap(source)
 				entities := placeholders.NewEntityCollection()
 
 				errors, _ := file.ValidatePlaceholders(meta, dungeon, entities)
@@ -28,7 +28,7 @@ var _ = Describe("MapValidator", func() {
 			It("returns an error if a mob references a prototype that doesn't exist", func() {
 				source := "../fixtures/maps/map_with_one_mob.map"
 
-				meta, dungeon := file.ImportPlaceholders(source)
+				meta, dungeon := file.ImportMap(source)
 				entities := placeholders.NewEntityCollection()
 
 				file.AddEntityToCollection("../fixtures/entities/mob.mob.yaml", entities)
@@ -45,7 +45,7 @@ var _ = Describe("MapValidator", func() {
 			It("returns error if door is referenced but doesn't exist", func() {
 				source := "../fixtures/maps/map_with_one_door.map"
 
-				meta, dungeon := file.ImportPlaceholders(source)
+				meta, dungeon := file.ImportMap(source)
 				entities := placeholders.NewEntityCollection()
 
 				errors, _ := file.ValidatePlaceholders(meta, dungeon, entities)
@@ -59,7 +59,7 @@ var _ = Describe("MapValidator", func() {
 				source := "../fixtures/maps/map_with_one_door.map"
 				entFile := "../fixtures/entities/door.door.yaml"
 
-				meta, dungeon := file.ImportPlaceholders(source)
+				meta, dungeon := file.ImportMap(source)
 				entities := placeholders.NewEntityCollection()
 				file.AddEntityToCollection(entFile, entities)
 
@@ -76,7 +76,7 @@ var _ = Describe("MapValidator", func() {
 		It("returns error if there is no start position", func() {
 			mapFile := "../fixtures/maps/empty_map.map"
 
-			meta, dungeon := file.ImportPlaceholders(mapFile)
+			meta, dungeon := file.ImportMap(mapFile)
 
 			entities := placeholders.NewEntityCollection()
 

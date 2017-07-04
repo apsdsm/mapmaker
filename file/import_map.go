@@ -35,8 +35,8 @@ const (
 // lineParts are the two parts of a line of the dungeon after it is split into map data and annotation data
 type lineParts []string
 
-// ImportMapPlaceholders will import the data from a .map file and store it in a placeholder
-func ImportPlaceholders(path string) (*placeholders.Meta, *placeholders.Map) {
+// ImportMap will import the data from a .map file and store it in a placeholder
+func ImportMap(path string) (*placeholders.Meta, *placeholders.Map) {
 
 	// get the meta and dungeon for this file as buffers
 	metaBuffer, dungeonBuffer := getMetaAndDungeonBuffers(path)

@@ -23,7 +23,7 @@ import (
 )
 
 // readBytes will read and return the bytes from a file path and panic if it can't
-func ReadBytes(filePath string) *[]byte {
+func readBytes(filePath string) *[]byte {
 	file, err := os.Open(filePath)
 
 	defer file.Close()
@@ -42,7 +42,7 @@ func ReadBytes(filePath string) *[]byte {
 }
 
 // absPath will run abspath on a path string and panic if it can't
-func AbsPath(filePath string) string {
+func absPath(filePath string) string {
 	absPath, err := filepath.Abs(filePath)
 
 	if err != nil {
@@ -53,7 +53,7 @@ func AbsPath(filePath string) string {
 }
 
 // unmarshalYaml will try to unmarshal yaml from a byte array and pannic if it can't
-func UnmarshalYaml(in []byte, out interface{}) {
+func unmarshalYaml(in []byte, out interface{}) {
 	err := yaml.Unmarshal(in, out)
 
 	if err != nil {

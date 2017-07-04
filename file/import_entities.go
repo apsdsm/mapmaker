@@ -22,14 +22,14 @@ import (
 	"github.com/apsdsm/mapmaker/placeholders"
 )
 
-// ImportEntitiesFromMakeList will import all entities in a make list and return a collection with those entities
-func ImportEntitiesFromMakeList(filePath string) *placeholders.EntityCollection {
-	absPath := AbsPath(filePath)
-	bytes := ReadBytes(absPath)
+// ImportEntities will import all entities in a make list and return a collection with those entities
+func ImportEntities(filePath string) *placeholders.EntityCollection {
+	absPath := absPath(filePath)
+	bytes := readBytes(absPath)
 	collection := placeholders.NewEntityCollection()
 	makeList := placeholders.MakeList{}
 
-	UnmarshalYaml(*bytes, &makeList)
+	unmarshalYaml(*bytes, &makeList)
 
 	for _, include := range makeList.Include {
 		includePath := path.Join(path.Dir(absPath), include)
@@ -41,8 +41,8 @@ func ImportEntitiesFromMakeList(filePath string) *placeholders.EntityCollection 
 
 // AddEntityToCollection will add the entity stored in the file to the collection object
 func AddEntityToCollection(path string, collection *placeholders.EntityCollection) {
-	absPath := AbsPath(path)
-	bytes := ReadBytes(absPath)
+	absPath := absPath(path)
+	bytes := readBytes(absPath)
 
 	// we use the file extension to decide what kind of file it is
 	if strings.Contains(path, ".mob.") {
@@ -59,20 +59,20 @@ func AddEntityToCollection(path string, collection *placeholders.EntityCollectio
 // addMobToCollection adds a mob to the specified collection
 func addMobToCollection(bytes *[]byte, collection *placeholders.EntityCollection) {
 	mob := placeholders.Mob{}
-	UnmarshalYaml(*bytes, &mob)
+	unmarshalYaml(*bytes, &mob)
 	collection.Mobs = append(collection.Mobs, mob)
 }
 
 // addDoorToCollection adds a door to the specified collection
 func addDoorToCollection(bytes *[]byte, collection *placeholders.EntityCollection) {
 	door := placeholders.Door{}
-	UnmarshalYaml(*bytes, &door)
+	unmarshalYaml(*bytes, &door)
 	collection.Doors = append(collection.Doors, door)
 }
 
 // addKeyToCollection adds a key to the specified collection
 func addKeyToCollection(bytes *[]byte, collection *placeholders.EntityCollection) {
 	key := placeholders.Key{}
-	UnmarshalYaml(*bytes, &key)
+	unmarshalYaml(*bytes, &key)
 	collection.Keys = append(collection.Keys, key)
 }

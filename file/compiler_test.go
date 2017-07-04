@@ -7,15 +7,15 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Converter", func() {
+var _ = Describe("Compiler", func() {
 
 	It("adds metadata to the map object", func() {
 		source := "../fixtures/maps/meta_and_map.map"
 
-		metaData, levelData := ImportPlaceholders(source)
+		metaData, levelData := ImportMap(source)
 		entityData := placeholders.NewEntityCollection()
 
-		level := ConvertPlaceholdersToMap(metaData, levelData, entityData)
+		level := CompileLevel(metaData, levelData, entityData)
 
 		Expect(level.Link).To(Equal("prison"))
 		Expect(level.Name).To(Equal("The Jovian Prison"))
@@ -25,10 +25,10 @@ var _ = Describe("Converter", func() {
 	It("converts runes into walls and floors", func() {
 		source := "../fixtures/maps/meta_and_map.map"
 
-		metaData, mapData := ImportPlaceholders(source)
+		metaData, mapData := ImportMap(source)
 		entityData := placeholders.NewEntityCollection()
 
-		level := ConvertPlaceholdersToMap(metaData, mapData, entityData)
+		level := CompileLevel(metaData, mapData, entityData)
 
 		Expect(level.Width).To(Equal(mapData.Width))
 		Expect(level.Height).To(Equal(mapData.Height))
@@ -51,10 +51,10 @@ var _ = Describe("Converter", func() {
 		map_source := "../fixtures/maps/meta_and_map.map"
 		ent_source := "../fixtures/makelists/basic.yaml"
 
-		metaData, mapData := ImportPlaceholders(map_source)
-		entities := ImportEntitiesFromMakeList(ent_source)
+		metaData, mapData := ImportMap(map_source)
+		entities := ImportEntities(ent_source)
 
-		level := ConvertPlaceholdersToMap(metaData, mapData, entities)
+		level := CompileLevel(metaData, mapData, entities)
 
 		Expect(len(level.Doors)).To(Equal(1))
 		Expect(len(level.Mobs)).To(Equal(1))
@@ -65,10 +65,10 @@ var _ = Describe("Converter", func() {
 		map_source := "../fixtures/maps/meta_and_annotated_map.map"
 		ent_source := "../fixtures/makelists/annotated.yaml"
 
-		metaData, mapData := ImportPlaceholders(map_source)
-		entities := ImportEntitiesFromMakeList(ent_source)
+		metaData, mapData := ImportMap(map_source)
+		entities := ImportEntities(ent_source)
 
-		level := ConvertPlaceholdersToMap(metaData, mapData, entities)
+		level := CompileLevel(metaData, mapData, entities)
 
 		Expect(level.Tiles[2][1].Spawn).To(Equal("mob_link"))
 	})
