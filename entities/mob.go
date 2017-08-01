@@ -12,10 +12,10 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package placeholders
+package entities
 
-// Key is a placeholder for key entities in a level
-type Key struct {
+// Mob is a placeholder for mob entities in a level
+type Mob struct {
 
 	// displayed name
 	Name string
@@ -23,6 +23,11 @@ type Key struct {
 	// physical name
 	Link string
 
-	// description
-	Desc string
+	// link to prototype entity for this entity
+	Prot string
+}
+
+// NeedsPrototype returns true if the mob requires a prototype entity
+func (mob *Mob) NeedsPrototype() bool {
+	return mob.Prot != ""
 }

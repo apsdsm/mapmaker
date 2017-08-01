@@ -14,16 +14,16 @@
 
 package maps
 
-import "github.com/apsdsm/mapmaker/placeholders"
+import "github.com/apsdsm/mapmaker/entities"
 
 // A Map contains a grid of tiles
 type Map struct {
 	Width, Height    int
 	Link, Name, Desc string
 	Tiles            [][]Tile
-	Doors            []placeholders.Door
-	Keys             []placeholders.Key
-	Mobs             []placeholders.Mob
+	Doors            []entities.Door
+	Keys             []entities.Key
+	Mobs             []entities.Mob
 }
 
 // NewMap generates a new map initialized to the specified size

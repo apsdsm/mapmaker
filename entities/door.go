@@ -12,22 +12,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package placeholders
+package entities
 
-// Mob is a placeholder for mob entities in a level
-type Mob struct {
-
-	// displayed name
-	Name string
+// Door is a placeholder for door entities in a level
+type Door struct {
 
 	// physical name
 	Link string
 
-	// link to prototype entity for this entity
-	Prot string
+	// true if door is locked
+	Locked bool
+
+	// link to key that unlocks/locks door
+	Key string
+
+	// events
+	OnTry string
 }
 
-// NeedsPrototype returns true if the mob requires a prototype entity
-func (mob *Mob) NeedsPrototype() bool {
-	return mob.Prot != ""
+// NeedsKey returns true if the door requires a key
+func (d *Door) NeedsKey() bool {
+	return d.Key != ""
 }

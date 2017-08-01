@@ -1,0 +1,7 @@
+name: Simple makelist
+desc: make list for simple map
+include:
+  - ./entities/door1.door.yaml
+  - ./entities/door2.door.yaml
+  - ./entities/door2key.key.yaml
+  - ./entities/goblin.mob.yaml

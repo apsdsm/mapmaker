@@ -19,6 +19,7 @@ import (
 
 	"path"
 
+	"github.com/apsdsm/mapmaker/entities"
 	"github.com/apsdsm/mapmaker/placeholders"
 )
 
@@ -58,21 +59,21 @@ func AddEntityToCollection(path string, collection *placeholders.EntityCollectio
 
 // addMobToCollection adds a mob to the specified collection
 func addMobToCollection(bytes *[]byte, collection *placeholders.EntityCollection) {
-	mob := placeholders.Mob{}
+	mob := entities.Mob{}
 	unmarshalYaml(*bytes, &mob)
 	collection.Mobs = append(collection.Mobs, mob)
 }
 
 // addDoorToCollection adds a door to the specified collection
 func addDoorToCollection(bytes *[]byte, collection *placeholders.EntityCollection) {
-	door := placeholders.Door{}
+	door := entities.Door{}
 	unmarshalYaml(*bytes, &door)
 	collection.Doors = append(collection.Doors, door)
 }
 
 // addKeyToCollection adds a key to the specified collection
 func addKeyToCollection(bytes *[]byte, collection *placeholders.EntityCollection) {
-	key := placeholders.Key{}
+	key := entities.Key{}
 	unmarshalYaml(*bytes, &key)
 	collection.Keys = append(collection.Keys, key)
 }
