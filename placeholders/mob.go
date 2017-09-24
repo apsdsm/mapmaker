@@ -12,16 +12,22 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps_test
+package placeholders
 
-import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+// Mob is a placeholder for mob entities in a level
+type Mob struct {
 
-	"testing"
-)
+	// displayed name
+	Name string
 
-func TestMaps(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "Maps Suite")
+	// physical name
+	Link string
+
+	// link to prototype entity for this entity
+	Prot string
+}
+
+// NeedsPrototype returns true if the mob requires a prototype entity
+func (mob *Mob) NeedsPrototype() bool {
+	return mob.Prot != ""
 }

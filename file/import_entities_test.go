@@ -21,8 +21,7 @@ var _ = Describe("EntityImporter", func() {
 		file.AddEntityToCollection("../fixtures/entities/mob_prot.mob.yaml", entities)
 
 		Expect(len(entities.Mobs)).To(Equal(2))
-		// insert prototype expectations
-		// should have hp, etc.
+		// TODO: insert prototype expectations
 	})
 
 	It("loads a yaml file of door", func() {

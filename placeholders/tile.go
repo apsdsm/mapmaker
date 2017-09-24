@@ -12,17 +12,16 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package entities
+package placeholders
 
-// Key is a placeholder for key entities in a level
-type Key struct {
+// A Tile is a single tile in a map
+type Tile struct {
+	// rune for the tile
+	Rune rune
 
-	// displayed name
-	Name string
+	// if the tile is walkable or not
+	Walkable bool
 
-	// physical name
-	Link string
-
-	// description
-	Desc string
+	// the object that should spawn on this tile
+	Spawn string
 }

@@ -1,0 +1,5 @@
+name: Small entity list
+desc: entity list for small map
+include:
+  - ./entities/door.door.yaml
+  - ./entities/goblin.mob.yaml

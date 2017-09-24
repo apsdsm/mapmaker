@@ -12,25 +12,30 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package entities
+package placeholders
 
-// Door is a placeholder for door entities in a level
-type Door struct {
-
-	// physical name
-	Link string
-
-	// true if door is locked
-	Locked bool
-
-	// link to key that unlocks/locks door
-	Key string
-
-	// events
-	OnTry string
+// A Dungeon contains map and entity data for a single dungeon
+type Dungeon struct {
+	Width, Height    int
+	Link, Name, Desc string
+	StartPosition    Position
+	Tiles            [][]Tile
+	Doors            []Door
+	Keys             []Key
+	Mobs             []Mob
 }
 
-// NeedsKey returns true if the door requires a key
-func (d *Door) NeedsKey() bool {
-	return d.Key != ""
+// NewDungeon generates a new map initialized to the specified size
+func NewDungeon(width, height int) *Dungeon {
+	m := Dungeon{}
+
+	m.Width = width
+	m.Height = height
+	m.Tiles = make([][]Tile, width)
+
+	for i := range m.Tiles {
+		m.Tiles[i] = make([]Tile, height)
+	}
+
+	return &m
 }

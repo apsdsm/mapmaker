@@ -12,31 +12,17 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps
+package placeholders
 
-import "github.com/apsdsm/mapmaker/entities"
+// Key is a placeholder for key entities in a level
+type Key struct {
 
-// A Map contains a grid of tiles
-type Map struct {
-	Width, Height    int
-	Link, Name, Desc string
-	Tiles            [][]Tile
-	Doors            []entities.Door
-	Keys             []entities.Key
-	Mobs             []entities.Mob
-}
+	// displayed name
+	Name string
 
-// NewMap generates a new map initialized to the specified size
-func NewMap(width, height int) *Map {
-	m := Map{}
+	// physical name
+	Link string
 
-	m.Width = width
-	m.Height = height
-	m.Tiles = make([][]Tile, width)
-
-	for i := range m.Tiles {
-		m.Tiles[i] = make([]Tile, height)
-	}
-
-	return &m
+	// description
+	Desc string
 }

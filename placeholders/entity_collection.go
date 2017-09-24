@@ -14,28 +14,26 @@
 
 package placeholders
 
-import "github.com/apsdsm/mapmaker/entities"
-
 // An EntityCollection is a placeholder collection of the entities created for a level
 type EntityCollection struct {
-	Mobs  []entities.Mob
-	Doors []entities.Door
-	Keys  []entities.Key
+	Mobs  []Mob
+	Doors []Door
+	Keys  []Key
 }
 
 // NewEntityCollection initializes and returns an EntityCollection object
 func NewEntityCollection() *EntityCollection {
 	e := EntityCollection{
-		Mobs:  make([]entities.Mob, 0, 10),
-		Doors: make([]entities.Door, 0, 10),
-		Keys:  make([]entities.Key, 0, 10),
+		Mobs:  make([]Mob, 0, 10),
+		Doors: make([]Door, 0, 10),
+		Keys:  make([]Key, 0, 10),
 	}
 
 	return &e
 }
 
 // GetMob returns a mob if it exists in the collection. Otherwise nil
-func (collection *EntityCollection) GetMob(link string) *entities.Mob {
+func (collection *EntityCollection) GetMob(link string) *Mob {
 	for _, m := range collection.Mobs {
 		if m.Link == link {
 			return &m
@@ -51,7 +49,7 @@ func (collection *EntityCollection) HasMob(link string) bool {
 }
 
 // GetDoor returns a link to a door if it exists, otherwise nil
-func (collection *EntityCollection) GetDoor(link string) *entities.Door {
+func (collection *EntityCollection) GetDoor(link string) *Door {
 	for _, d := range collection.Doors {
 		if d.Link == link {
 			return &d

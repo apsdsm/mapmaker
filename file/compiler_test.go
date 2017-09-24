@@ -12,14 +12,14 @@ var _ = Describe("Compiler", func() {
 	It("adds metadata to the map object", func() {
 		source := "../fixtures/maps/meta_and_map.map"
 
-		metaData, levelData := ImportMap(source)
+		metaData, mapData := ImportMap(source)
 		entityData := placeholders.NewEntityCollection()
 
-		level := CompileLevel(metaData, levelData, entityData)
+		dungeon := CompileLevel(metaData, mapData, entityData)
 
-		Expect(level.Link).To(Equal("prison"))
-		Expect(level.Name).To(Equal("The Jovian Prison"))
-		Expect(level.Desc).To(Equal("A gloomy building hidden deep in the Jovian woods."))
+		Expect(dungeon.Link).To(Equal("prison"))
+		Expect(dungeon.Name).To(Equal("The Jovian Prison"))
+		Expect(dungeon.Desc).To(Equal("A gloomy building hidden deep in the Jovian woods."))
 	})
 
 	It("converts runes into walls and floors", func() {
@@ -28,10 +28,10 @@ var _ = Describe("Compiler", func() {
 		metaData, mapData := ImportMap(source)
 		entityData := placeholders.NewEntityCollection()
 
-		level := CompileLevel(metaData, mapData, entityData)
+		dungeon := CompileLevel(metaData, mapData, entityData)
 
-		Expect(level.Width).To(Equal(mapData.Width))
-		Expect(level.Height).To(Equal(mapData.Height))
+		Expect(dungeon.Width).To(Equal(mapData.Width))
+		Expect(dungeon.Height).To(Equal(mapData.Height))
 
 		// NB: cols/rows are inverted
 		walkable := [][]bool{
@@ -42,7 +42,7 @@ var _ = Describe("Compiler", func() {
 
 		for i := 0; i < len(walkable); i++ {
 			for j := 0; j < len(walkable[i]); j++ {
-				Expect(level.Tiles[i][j].Walkable).To(Equal(walkable[i][j]))
+				Expect(dungeon.Tiles[i][j].Walkable).To(Equal(walkable[i][j]))
 			}
 		}
 	})
@@ -54,11 +54,11 @@ var _ = Describe("Compiler", func() {
 		metaData, mapData := ImportMap(map_source)
 		entities := ImportEntities(ent_source)
 
-		level := CompileLevel(metaData, mapData, entities)
+		dungeon := CompileLevel(metaData, mapData, entities)
 
-		Expect(len(level.Doors)).To(Equal(1))
-		Expect(len(level.Mobs)).To(Equal(1))
-		Expect(len(level.Keys)).To(Equal(1))
+		Expect(len(dungeon.Doors)).To(Equal(1))
+		Expect(len(dungeon.Mobs)).To(Equal(1))
+		Expect(len(dungeon.Keys)).To(Equal(1))
 	})
 
 	It("sets the spawn values for each cell", func() {
@@ -68,8 +68,20 @@ var _ = Describe("Compiler", func() {
 		metaData, mapData := ImportMap(map_source)
 		entities := ImportEntities(ent_source)
 
-		level := CompileLevel(metaData, mapData, entities)
+		dungeon := CompileLevel(metaData, mapData, entities)
 
-		Expect(level.Tiles[2][1].Spawn).To(Equal("mob_link"))
+		Expect(dungeon.Tiles[2][1].Spawn).To(Equal("mob_link"))
+	})
+
+	It("Adds the start position", func() {
+		map_source := "../fixtures/maps/meta_and_annotated_map.map"
+		ent_source := "../fixtures/makelists/annotated.yaml"
+
+		metaData, mapData := ImportMap(map_source)
+		entities := ImportEntities(ent_source)
+
+		dungeon := CompileLevel(metaData, mapData, entities)
+
+		Expect(dungeon.StartPosition).To(Equal(placeholders.Position{4, 3}))
 	})
 })

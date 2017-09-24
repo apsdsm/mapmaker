@@ -12,11 +12,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-package maps
+package placeholders
 
-// A Tile is a single tile in a map
-type Tile struct {
-	Rune     rune
-	Walkable bool
-	Spawn    string
+// Door is a placeholder for door entities in a level
+type Door struct {
+
+	// physical name
+	Link string
+
+	// true if door is locked
+	Locked bool
+
+	// link to key that unlocks/locks door
+	Key string
+
+	// events
+	OnTry string
+}
+
+// NeedsKey returns true if the door requires a key
+func (d *Door) NeedsKey() bool {
+	return d.Key != ""
 }
