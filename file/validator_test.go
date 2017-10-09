@@ -1,3 +1,17 @@
+// Copyright 2017 Nick del Pozo
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package file_test
 
 import (
@@ -85,6 +99,20 @@ var _ = Describe("MapValidator", func() {
 			Expect(len(errors)).To(Equal(1))
 			Expect(errors[0].LineNumber).To(Equal(-1))
 			Expect(errors[0].Message).To(Equal("map has no start position."))
+		})
+	})
+
+	Context("Meta rules", func() {
+		It("returns warning if there is no name", func() {
+			mapFile := "../fixtures/maps/identity.map"
+			meta, dungeon := file.ImportMap(mapFile)
+			entities := placeholders.NewEntityCollection()
+
+			_, warnings := file.ValidatePlaceholders(meta, dungeon, entities)
+
+			Expect(len(warnings)).To(Equal(1))
+			Expect(warnings[0].LineNumber).To(Equal(-1))
+			Expect(warnings[0].Message).To(Equal("map has no name."))
 		})
 	})
 })
