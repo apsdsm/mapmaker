@@ -16,8 +16,7 @@ package placeholders
 
 // A Tile is a single tile in a map
 type Tile struct {
-	Rune      rune
-	Walkable  bool
-	Spawn     string
-	Neighbors [8]Position
+	Rune     rune
+	Walkable bool
+	Spawn    string
 }

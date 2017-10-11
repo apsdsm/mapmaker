@@ -38,36 +38,6 @@ func CompileLevel(metaData *placeholders.Meta, mapData *placeholders.Map, entiti
 		}
 	}
 
-	// calc the neighbors for each tile start at N and go clockwise:
-	// 8 1 2
-	// 7   3
-	// 6 5 4
-	jump := []placeholders.Position{
-		{0, -1},  // N
-		{1, -1},  // NE
-		{1, 0},   // E
-		{1, 1},   // SE
-		{0, 1},   // S
-		{-1, 1},  // SW
-		{-1, 0},  // W
-		{-1, -1}, // NW
-	}
-
-	for x := range m.Tiles {
-		for y := range m.Tiles[x] {
-			for n := 0; n < 8; n++ {
-				nPos := placeholders.Position{x + jump[n].X, y + jump[n].Y}
-
-				// if any part of the coord is out of bounds then it is set as an invalid position
-				if nPos.X < 0 || nPos.Y < 0 || nPos.X >= mapData.Width || nPos.Y >= mapData.Height {
-					nPos = placeholders.Position{-1, -1}
-				}
-
-				m.Tiles[x][y].Neighbors[n] = nPos
-			}
-		}
-	}
-
 	// start position
 	if mapData.StartPosition != nil {
 		m.StartPosition = *mapData.StartPosition
