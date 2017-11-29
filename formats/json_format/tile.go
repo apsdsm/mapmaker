@@ -12,26 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package json_format
 
-// Map is a placeholder for layout data in a .map file
-type Map struct {
-	Height, Width int
-	Grid          [][]*Cell
-	StartPosition *Position
-}
-
-// NewMap returns an initialized map placeholder
-func NewMap(height, width int) *Map {
-	m := Map{
-		Width:  width,
-		Height: height,
-		Grid:   make([][]*Cell, width),
-	}
-
-	for i := 0; i < width; i++ {
-		m.Grid[i] = make([]*Cell, height)
-	}
-
-	return &m
+// A Tile is a single tile in a map
+type Tile struct {
+	Rune     rune
+	Walkable bool
+	Spawn    string
 }

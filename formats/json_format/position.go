@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package file
+package json_format
 
-// Error holds data about errors encountered during the map import process
-type Error struct {
-	Message    string
-	FileName   string
-	LineNumber int
-	isWarning  bool
+// Position represents a single XY coord on the map
+type Position struct {
+	X, Y int
 }

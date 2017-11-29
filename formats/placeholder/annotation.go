@@ -12,30 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package placeholder
 
-// A Dungeon contains map and entity data for a single dungeon
-type Dungeon struct {
-	Width, Height    int
-	Link, Name, Desc string
-	StartPosition    Position
-	Tiles            [][]Tile
-	Doors            []Door
-	Keys             []Key
-	Mobs             []Mob
-}
-
-// NewDungeon generates a new map initialized to the specified size
-func NewDungeon(width, height int) *Dungeon {
-	m := Dungeon{}
-
-	m.Width = width
-	m.Height = height
-	m.Tiles = make([][]Tile, width)
-
-	for i := range m.Tiles {
-		m.Tiles[i] = make([]Tile, height)
-	}
-
-	return &m
+// Annotation is a placeholder for a cell annotation in a map
+type Annotation struct {
+	Target string
+	Link   string
 }

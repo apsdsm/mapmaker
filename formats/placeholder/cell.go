@@ -12,24 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package placeholder
 
 // Cell is a placeholder for a single cell in a map
 type Cell struct {
-	// content of cell as read from file
-	Rune rune
-
-	// type of cell
-	Type string
-
-	// link from annotation
-	Link string
-
-	// true if this cell was annotated
+	Rune      rune
+	Type      string
+	Link      string
 	Annotated bool
-
-	// location coordinates for tile
-	X, Y int
+	X, Y      int
 }
 
 // EmptyCell returns a blank empty cell

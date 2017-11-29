@@ -15,11 +15,11 @@
 package file
 
 import (
-	"github.com/apsdsm/mapmaker/placeholders"
+	"github.com/apsdsm/mapmaker/formats/placeholder"
 )
 
 // ValidatePlaceholders will run all map data through a set of validations to make sure nothing is broken
-func ValidatePlaceholders(mapMeta *placeholders.Meta, levelData *placeholders.Map, entities *placeholders.EntityCollection) (errors []Error, warnings []Error) {
+func ValidatePlaceholders(mapMeta *placeholder.Meta, levelData *placeholder.Map, entities *placeholder.EntityCollection) (errors []Error, warnings []Error) {
 	errors = make([]Error, 0, 10)
 	warnings = make([]Error, 0, 10)
 
@@ -60,7 +60,7 @@ func ValidatePlaceholders(mapMeta *placeholders.Meta, levelData *placeholders.Ma
 }
 
 // validate a single cell
-func validateCell(cell *placeholders.Cell, line int, entities *placeholders.EntityCollection) *Error {
+func validateCell(cell *placeholder.Cell, line int, entities *placeholder.EntityCollection) *Error {
 	if !cell.Annotated {
 		return nil
 	}
@@ -69,15 +69,6 @@ func validateCell(cell *placeholders.Cell, line int, entities *placeholders.Enti
 		if !entities.HasMob(cell.Link) {
 			return &Error{
 				Message:    cell.Link + " is not defined by any entity.",
-				LineNumber: line,
-			}
-		}
-
-		mob := entities.GetMob(cell.Link)
-
-		if mob.NeedsPrototype() && !entities.HasMob(mob.Prot) {
-			return &Error{
-				Message:    mob.Link + " requires prototype " + mob.Prot + ", which is not defined by any entity.",
 				LineNumber: line,
 			}
 		}

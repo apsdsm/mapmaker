@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package placeholder
 
-// MapMeta is a placeholder for the metadata in a .map file
-type Meta struct {
-	Link string
-	Name string
-	Desc string
+// MakeList holds information about the files that need to be imported to make a dungeon
+type MakeList struct {
+	Name    string
+	Desc    string
+	Include []string
 }

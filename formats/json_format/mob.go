@@ -12,12 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package file
+package json_format
 
-// Error holds data about errors encountered during the map import process
-type Error struct {
-	Message    string
-	FileName   string
-	LineNumber int
-	isWarning  bool
+// Mob is a placeholder for mob entities in a level
+type Mob struct {
+	Name string
+	Link string
+	Prot string
+	Rune string
+	Loot []Loot
+	Hp   string
+	Mp   string
+}
+
+// NeedsPrototype returns true if the mob requires a prototype entity
+func (mob *Mob) NeedsPrototype() bool {
+	return mob.Prot != ""
 }

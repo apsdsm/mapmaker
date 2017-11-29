@@ -2,8 +2,8 @@ prot: mob_prot
 link: mob_link
 name: Mob Name
 loot: 
-    - copper[10]
-    - gold[1~2]
-    - axe
+    - error1[10~
+    - error2[10
+    - error3[
 hp: 1
 mp: 2

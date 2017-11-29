@@ -1,0 +1,6 @@
+link: small_key
+type: key
+name: A Small Key
+desc: A regular key
+size: 1
+uniq: true

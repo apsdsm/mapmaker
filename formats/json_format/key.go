@@ -12,18 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package json_format
 
-// Line is a placeholder for each line of the structure part of a .map file
-type Line struct {
-	Cells         []*Cell
-	RawAnnoations string
-}
-
-// NewLine makes and returns a new line
-func NewLine(length int) Line {
-	line := Line{
-		Cells: make([]*Cell, length),
-	}
-	return line
+// Key is a placeholder for key entities in a level
+type Key struct {
+	Name string
+	Link string
+	Desc string
 }

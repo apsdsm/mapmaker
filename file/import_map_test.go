@@ -16,13 +16,13 @@ package file_test
 
 import (
 	"github.com/apsdsm/mapmaker/file"
-	"github.com/apsdsm/mapmaker/placeholders"
+	"github.com/apsdsm/mapmaker/formats/placeholder"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-func checkLevelHasEnoughCells(level *placeholders.Map) {
+func checkLevelHasEnoughCells(level *placeholder.Map) {
 	Expect(len(level.Grid)).To(Equal(level.Width))
 
 	for i := range level.Grid {

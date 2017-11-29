@@ -23,7 +23,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	"github.com/apsdsm/mapmaker/placeholders"
+	"github.com/apsdsm/mapmaker/formats/placeholder"
 )
 
 const (
@@ -36,7 +36,7 @@ const (
 type lineParts []string
 
 // ImportMap will import the data from a .map file and store it in a placeholder
-func ImportMap(path string) (*placeholders.Meta, *placeholders.Map) {
+func ImportMap(path string) (*placeholder.Meta, *placeholder.Map) {
 
 	// get the meta and dungeon for this file as buffers
 	metaBuffer, dungeonBuffer := getMetaAndDungeonBuffers(path)
@@ -80,13 +80,10 @@ func getMetaAndDungeonBuffers(path string) (metaBuffer bytes.Buffer, dungeonBuff
 
 		if text == seperator && section == beforeMeta {
 			section = insideMeta
-
 		} else if text == seperator && section == insideMeta {
 			section = mapContent
-
 		} else if section == insideMeta {
 			metaBuffer.WriteString(text + newline)
-
 		} else if section == mapContent {
 			dungeonBuffer.WriteString(text + newline)
 		}
@@ -96,8 +93,8 @@ func getMetaAndDungeonBuffers(path string) (metaBuffer bytes.Buffer, dungeonBuff
 }
 
 // parseMetaBuffer will marshal a yaml meta buffer into a placeholder object.
-func parseMetaBuffer(metaBuffer bytes.Buffer) *placeholders.Meta {
-	var meta placeholders.Meta
+func parseMetaBuffer(metaBuffer bytes.Buffer) *placeholder.Meta {
+	var meta placeholder.Meta
 
 	err := yaml.Unmarshal(metaBuffer.Bytes(), &meta)
 
@@ -109,7 +106,7 @@ func parseMetaBuffer(metaBuffer bytes.Buffer) *placeholders.Meta {
 }
 
 // parseDungeonBuffer will parse a dungeon buffer into an array of placeholder lines. It also returns rows and cols in dungeon
-func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholders.Map {
+func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholder.Map {
 
 	// put map data into a scanner
 	reader := bytes.NewReader(dungeonBuffer.Bytes())
@@ -117,7 +114,7 @@ func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholders.Map {
 	scanner.Split(bufio.ScanLines)
 
 	// set up vars for the loop
-	lines := make([]*placeholders.Line, 0, 64)
+	lines := make([]*placeholder.Line, 0, 64)
 	rows := 0
 	cols := 0
 
@@ -142,11 +139,11 @@ func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholders.Map {
 		}
 
 		// prepare a new line
-		line := placeholders.NewLine(len(mapData))
+		line := placeholder.NewLine(len(mapData))
 
 		// for each cell in the map line, add them as runes to the line
 		for i, r := range mapData {
-			line.Cells[i] = placeholders.NewCellFromRune(r)
+			line.Cells[i] = placeholder.NewCellFromRune(r)
 		}
 
 		// for each annotation, parse them and add them to the line
@@ -166,7 +163,7 @@ func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholders.Map {
 	}
 
 	// make placeholder dungeon
-	dungeon := placeholders.NewMap(rows, cols)
+	dungeon := placeholder.NewMap(rows, cols)
 
 	// copy cells from lines to grid
 	// - converts the alignment of rows and cols (lines are ROWxCOL, but a grid is COLxROW)
@@ -180,7 +177,7 @@ func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholders.Map {
 
 				// if this is a start tile
 				if thisCell.IsStart() {
-					dungeon.StartPosition = &placeholders.Position{X: j, Y: i}
+					dungeon.StartPosition = &placeholder.Position{X: j, Y: i}
 					thisCell.Rune = ' '
 				}
 
@@ -192,7 +189,7 @@ func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholders.Map {
 				dungeon.Grid[j][i] = thisCell
 			} else {
 				// pad with empty space if this line is shorter than longest line
-				dungeon.Grid[j][i] = placeholders.EmptyCell()
+				dungeon.Grid[j][i] = placeholder.EmptyCell()
 			}
 		}
 	}
@@ -201,7 +198,7 @@ func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholders.Map {
 }
 
 // getPartsFromMapText will return the parts in a line from the map
-func getPartsFromRawLine(text string) (mapData string, annotations []placeholders.Annotation) {
+func getPartsFromRawLine(text string) (mapData string, annotations []placeholder.Annotation) {
 	parts := strings.Split(text, "//")
 
 	if len(parts) > 0 {
@@ -216,11 +213,11 @@ func getPartsFromRawLine(text string) (mapData string, annotations []placeholder
 }
 
 // getAnnotations will parse and return annotation placeholders for each valid raw annotation in the array.
-func makeAnnotationArray(annotationData string) []placeholders.Annotation {
+func makeAnnotationArray(annotationData string) []placeholder.Annotation {
 	annotationData = strings.Trim(annotationData, " ")
 	rawAnnotations := strings.Split(annotationData, " ")
 
-	annotations := make([]placeholders.Annotation, 0, len(rawAnnotations))
+	annotations := make([]placeholder.Annotation, 0, len(rawAnnotations))
 
 	for _, rawAnnotation := range rawAnnotations {
 		aParts := strings.Split(rawAnnotation, ":")
@@ -229,7 +226,7 @@ func makeAnnotationArray(annotationData string) []placeholders.Annotation {
 			continue
 		}
 
-		a := placeholders.Annotation{
+		a := placeholder.Annotation{
 			Target: aParts[0],
 			Link:   aParts[1],
 		}

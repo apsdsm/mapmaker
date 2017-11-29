@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package placeholder
 
-// Annotation is a placeholder for a cell annotation in a map
-type Annotation struct {
-	Target string
-	Link   string
+// Key is a placeholder for key entities in a level
+type Key struct {
+	Name string
+	Link string
+	Desc string
 }

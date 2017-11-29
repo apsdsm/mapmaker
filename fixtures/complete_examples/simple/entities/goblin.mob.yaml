@@ -1,3 +1,6 @@
 link: goblin
+rune: g
 loot: []
+hp: 10
+mp: 0
 on_die: general_ondie

@@ -16,7 +16,8 @@ package file_test
 
 import (
 	. "github.com/apsdsm/mapmaker/file"
-	"github.com/apsdsm/mapmaker/placeholders"
+	"github.com/apsdsm/mapmaker/formats/json_format"
+	"github.com/apsdsm/mapmaker/formats/placeholder"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -24,76 +25,83 @@ import (
 var _ = Describe("Compiler", func() {
 
 	It("adds metadata to the map object", func() {
-		source := "../fixtures/maps/meta_and_map.map"
+		dungeon := placeholder.NewMap(0, 0)
 
-		metaData, mapData := ImportMap(source)
-		entityData := placeholders.NewEntityCollection()
+		meta := placeholder.Meta{
+			Link: "meta_link",
+			Name: "meta_name",
+			Desc: "meta_desc",
+		}
 
-		dungeon := CompileLevel(metaData, mapData, entityData)
+		entities := placeholder.NewEntityCollection()
 
-		Expect(dungeon.Link).To(Equal("prison"))
-		Expect(dungeon.Name).To(Equal("The Jovian Prison"))
-		Expect(dungeon.Desc).To(Equal("A gloomy building hidden deep in the Jovian woods."))
+		compiled := CompileLevel(&meta, dungeon, &entities)
+
+		Expect(compiled.Link).To(Equal("meta_link"))
+		Expect(compiled.Name).To(Equal("meta_name"))
+		Expect(compiled.Desc).To(Equal("meta_desc"))
 	})
 
 	It("converts runes into walls and floors", func() {
-		source := "../fixtures/maps/meta_and_map.map"
+		dungeon := placeholder.NewMap(2, 1)
 
-		metaData, mapData := ImportMap(source)
-		entityData := placeholders.NewEntityCollection()
+		dungeon.Grid[0][0] = &placeholder.Cell{Rune: '#'}
+		dungeon.Grid[0][1] = &placeholder.Cell{Rune: ' '}
 
-		dungeon := CompileLevel(metaData, mapData, entityData)
+		meta := placeholder.Meta{}
 
-		Expect(dungeon.Width).To(Equal(mapData.Width))
-		Expect(dungeon.Height).To(Equal(mapData.Height))
+		entities := placeholder.NewEntityCollection()
 
-		// NB: cols/rows are inverted
-		walkable := [][]bool{
-			{false, false, false}, {false, true, false}, {false, false, false},
-		}
+		compiled := CompileLevel(&meta, dungeon, &entities)
 
-		for i := 0; i < len(walkable); i++ {
-			for j := 0; j < len(walkable[i]); j++ {
-				Expect(dungeon.Tiles[i][j].Walkable).To(Equal(walkable[i][j]))
-			}
-		}
+		Expect(compiled.Tiles[0][0].Walkable).To(BeFalse())
+		Expect(compiled.Tiles[0][1].Walkable).To(BeTrue())
 	})
 
 	It("adds entities to the map", func() {
-		map_source := "../fixtures/maps/meta_and_map.map"
-		ent_source := "../fixtures/makelists/basic.yaml"
+		dungeon := placeholder.NewMap(0, 0)
 
-		metaData, mapData := ImportMap(map_source)
-		entities := ImportEntities(ent_source)
+		meta := placeholder.Meta{}
 
-		dungeon := CompileLevel(metaData, mapData, entities)
+		entities := placeholder.NewEntityCollection()
+		entities.AddMobs(placeholder.Mob{})
+		entities.AddDoors(placeholder.Door{})
+		entities.AddItems(placeholder.Item{})
 
-		Expect(len(dungeon.Doors)).To(Equal(1))
-		Expect(len(dungeon.Mobs)).To(Equal(1))
-		Expect(len(dungeon.Keys)).To(Equal(1))
+		compiled := CompileLevel(&meta, dungeon, &entities)
+
+		Expect(len(compiled.Doors)).To(Equal(1))
+		Expect(len(compiled.Mobs)).To(Equal(1))
+		Expect(len(compiled.Items)).To(Equal(1))
 	})
 
 	It("sets the spawn values for each cell", func() {
-		map_source := "../fixtures/maps/meta_and_annotated_map.map"
-		ent_source := "../fixtures/makelists/annotated.yaml"
+		dungeon := placeholder.NewMap(1, 1)
+		dungeon.Grid[0][0] = &placeholder.Cell{
+			Type: "mob",
+			Link: "mob_link",
+		}
 
-		metaData, mapData := ImportMap(map_source)
-		entities := ImportEntities(ent_source)
+		meta := placeholder.Meta{}
 
-		dungeon := CompileLevel(metaData, mapData, entities)
+		entities := placeholder.NewEntityCollection()
 
-		Expect(dungeon.Tiles[2][1].Spawn).To(Equal("mob_link"))
+		compiled := CompileLevel(&meta, dungeon, &entities)
+
+		Expect(compiled.Tiles[0][0].Spawn).To(Equal("mob_link"))
 	})
 
 	It("Adds the start position", func() {
-		map_source := "../fixtures/maps/meta_and_annotated_map.map"
-		ent_source := "../fixtures/makelists/annotated.yaml"
+		dungeon := placeholder.NewMap(0, 0)
 
-		metaData, mapData := ImportMap(map_source)
-		entities := ImportEntities(ent_source)
+		dungeon.StartPosition = &placeholder.Position{1, 1}
 
-		dungeon := CompileLevel(metaData, mapData, entities)
+		meta := placeholder.Meta{}
 
-		Expect(dungeon.StartPosition).To(Equal(placeholders.Position{4, 3}))
+		entities := placeholder.NewEntityCollection()
+
+		compiled := CompileLevel(&meta, dungeon, &entities)
+
+		Expect(compiled.StartPosition).To(Equal(json_format.Position{1, 1}))
 	})
 })

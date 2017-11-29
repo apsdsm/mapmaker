@@ -12,22 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package json_format
 
 // Door is a placeholder for door entities in a level
 type Door struct {
-
-	// physical name
-	Link string
-
-	// true if door is locked
+	Link   string
 	Locked bool
-
-	// link to key that unlocks/locks door
-	Key string
-
-	// events
-	OnTry string
+	Key    string
+	OnTry  string
 }
 
 // NeedsKey returns true if the door requires a key

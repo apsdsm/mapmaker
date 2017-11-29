@@ -12,22 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package placeholder
 
-// Mob is a placeholder for mob entities in a level
-type Mob struct {
-
-	// displayed name
-	Name string
-
-	// physical name
+// MapMeta is a placeholder for the metadata in a .map file
+type Meta struct {
 	Link string
-
-	// link to prototype entity for this entity
-	Prot string
-}
-
-// NeedsPrototype returns true if the mob requires a prototype entity
-func (mob *Mob) NeedsPrototype() bool {
-	return mob.Prot != ""
+	Name string
+	Desc string
 }

@@ -12,3 +12,7 @@ approach a usable state in GoDungeon.
 A more in depth set of instructions will be provided in the future. For
 now there are a few examples of how to format maps in the fixtures
 directory.
+
+# Notes
+
+

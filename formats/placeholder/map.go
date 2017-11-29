@@ -12,17 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package placeholder
 
-// Key is a placeholder for key entities in a level
-type Key struct {
+// Map is a placeholder for layout data in a .map file
+type Map struct {
+	Height        int
+	Width         int
+	Grid          [][]*Cell
+	StartPosition *Position
+}
 
-	// displayed name
-	Name string
+// NewMap returns an initialized map placeholder
+func NewMap(height, width int) *Map {
+	m := Map{
+		Width:  width,
+		Height: height,
+		Grid:   make([][]*Cell, width),
+	}
 
-	// physical name
-	Link string
+	for i := 0; i < width; i++ {
+		m.Grid[i] = make([]*Cell, height)
+	}
 
-	// description
-	Desc string
+	return &m
 }

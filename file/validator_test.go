@@ -17,7 +17,7 @@ package file_test
 import (
 	"github.com/apsdsm/mapmaker/file"
 
-	"github.com/apsdsm/mapmaker/placeholders"
+	"github.com/apsdsm/mapmaker/formats/placeholder"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -25,44 +25,27 @@ import (
 var _ = Describe("MapValidator", func() {
 
 	Context("entity rules", func() {
-		Context("mob rules", func() {
-			It("returns error if mob is referenced but doesn't exist", func() {
-				source := "../fixtures/maps/map_with_one_mob.map"
+		It("returns error if map references mob that doesn't exist", func() {
+			source := "../fixtures/maps/map_with_one_mob.map"
 
-				meta, dungeon := file.ImportMap(source)
-				entities := placeholders.NewEntityCollection()
+			meta, dungeon := file.ImportMap(source)
+			entities := placeholder.NewEntityCollection()
 
-				errors, _ := file.ValidatePlaceholders(meta, dungeon, entities)
+			errors, _ := file.ValidatePlaceholders(meta, dungeon, &entities)
 
-				Expect(len(errors)).To(Equal(1))
-				Expect(errors[0].LineNumber).To(Equal(1))
-				Expect(errors[0].Message).To(Equal("mob_link is not defined by any entity."))
-			})
-
-			It("returns an error if a mob references a prototype that doesn't exist", func() {
-				source := "../fixtures/maps/map_with_one_mob.map"
-
-				meta, dungeon := file.ImportMap(source)
-				entities := placeholders.NewEntityCollection()
-
-				file.AddEntityToCollection("../fixtures/entities/mob.mob.yaml", entities)
-
-				errors, _ := file.ValidatePlaceholders(meta, dungeon, entities)
-
-				Expect(len(errors)).To(Equal(1))
-				Expect(errors[0].LineNumber).To(Equal(1))
-				Expect(errors[0].Message).To(Equal("mob_link requires prototype mob_prot, which is not defined by any entity."))
-			})
+			Expect(len(errors)).To(Equal(1))
+			Expect(errors[0].LineNumber).To(Equal(1))
+			Expect(errors[0].Message).To(Equal("mob_link is not defined by any entity."))
 		})
 
 		Context("door rules", func() {
-			It("returns error if door is referenced but doesn't exist", func() {
+			It("returns error if door is referenced that doesn't exist", func() {
 				source := "../fixtures/maps/map_with_one_door.map"
 
 				meta, dungeon := file.ImportMap(source)
-				entities := placeholders.NewEntityCollection()
+				entities := placeholder.NewEntityCollection()
 
-				errors, _ := file.ValidatePlaceholders(meta, dungeon, entities)
+				errors, _ := file.ValidatePlaceholders(meta, dungeon, &entities)
 
 				Expect(len(errors)).To(Equal(1))
 				Expect(errors[0].LineNumber).To(Equal(1))
@@ -74,10 +57,12 @@ var _ = Describe("MapValidator", func() {
 				entFile := "../fixtures/entities/door.door.yaml"
 
 				meta, dungeon := file.ImportMap(source)
-				entities := placeholders.NewEntityCollection()
-				file.AddEntityToCollection(entFile, entities)
+				entities := placeholder.NewEntityCollection()
+				errors := make([]file.Error, 0, 0)
+				warnings := make([]file.Error, 0, 0)
+				errors, warnings = file.AddEntityToCollection(entFile, &entities, errors, warnings)
 
-				_, warnings := file.ValidatePlaceholders(meta, dungeon, entities)
+				errors, warnings = file.ValidatePlaceholders(meta, dungeon, &entities)
 
 				Expect(len(warnings)).To(Equal(1))
 				Expect(warnings[0].LineNumber).To(Equal(1))
@@ -92,9 +77,9 @@ var _ = Describe("MapValidator", func() {
 
 			meta, dungeon := file.ImportMap(mapFile)
 
-			entities := placeholders.NewEntityCollection()
+			entities := placeholder.NewEntityCollection()
 
-			errors, _ := file.ValidatePlaceholders(meta, dungeon, entities)
+			errors, _ := file.ValidatePlaceholders(meta, dungeon, &entities)
 
 			Expect(len(errors)).To(Equal(1))
 			Expect(errors[0].LineNumber).To(Equal(-1))
@@ -106,9 +91,9 @@ var _ = Describe("MapValidator", func() {
 		It("returns warning if there is no name", func() {
 			mapFile := "../fixtures/maps/identity.map"
 			meta, dungeon := file.ImportMap(mapFile)
-			entities := placeholders.NewEntityCollection()
+			entities := placeholder.NewEntityCollection()
 
-			_, warnings := file.ValidatePlaceholders(meta, dungeon, entities)
+			_, warnings := file.ValidatePlaceholders(meta, dungeon, &entities)
 
 			Expect(len(warnings)).To(Equal(1))
 			Expect(warnings[0].LineNumber).To(Equal(-1))

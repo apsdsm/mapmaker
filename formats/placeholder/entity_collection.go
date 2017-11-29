@@ -12,28 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package placeholder
 
 // An EntityCollection is a placeholder collection of the entities created for a level
 type EntityCollection struct {
 	Mobs  []Mob
 	Doors []Door
 	Keys  []Key
+	Items []Item
 }
 
 // NewEntityCollection initializes and returns an EntityCollection object
-func NewEntityCollection() *EntityCollection {
+func NewEntityCollection() EntityCollection {
 	e := EntityCollection{
 		Mobs:  make([]Mob, 0, 10),
 		Doors: make([]Door, 0, 10),
 		Keys:  make([]Key, 0, 10),
+		Items: make([]Item, 0, 10),
 	}
 
-	return &e
+	return e
 }
 
-// GetMob returns a mob if it exists in the collection. Otherwise nil
-func (collection *EntityCollection) GetMob(link string) *Mob {
+// Mob returns a mob if it exists in the collection. Otherwise nil
+func (collection *EntityCollection) Mob(link string) *Mob {
 	for _, m := range collection.Mobs {
 		if m.Link == link {
 			return &m
@@ -45,7 +47,12 @@ func (collection *EntityCollection) GetMob(link string) *Mob {
 
 // HasMob returns true if this collection has a mob that is referenced by the given link
 func (collection *EntityCollection) HasMob(link string) bool {
-	return collection.GetMob(link) != nil
+	return collection.Mob(link) != nil
+}
+
+// AddMob adds mobs to the collection
+func (collection *EntityCollection) AddMobs(mob ...Mob) {
+	collection.Mobs = append(collection.Mobs, mob...)
 }
 
 // GetDoor returns a link to a door if it exists, otherwise nil
@@ -59,18 +66,48 @@ func (collection *EntityCollection) GetDoor(link string) *Door {
 	return nil
 }
 
+// AddDoors adds mobs to the collection
+func (collection *EntityCollection) AddDoors(door ...Door) {
+	collection.Doors = append(collection.Doors, door...)
+}
+
 // HasDoor returns true if this collection has a door that is referenced by the given link
 func (collection *EntityCollection) HasDoor(link string) bool {
 	return collection.GetDoor(link) != nil
 }
 
-// HasKey returns true if this collection has a key that is referenced by the given link
-func (collection *EntityCollection) HasKey(link string) bool {
-	for _, k := range collection.Keys {
-		if k.Link == link {
-			return true
+// HasKey returns true if key with matching link exists
+func (c *EntityCollection) HasKey(link string) bool {
+	return c.Key(link) != nil
+}
+
+// Key returns address of a key with matching link, or nil if no key exists
+func (collection *EntityCollection) Key(link string) *Key {
+	for i := range collection.Keys {
+		if collection.Keys[i].Link == link {
+			return &collection.Keys[i]
 		}
 	}
 
-	return false
+	return nil
+}
+
+// AddItems adds items to the collection
+func (collection *EntityCollection) AddItems(item ...Item) {
+	collection.Items = append(collection.Items, item...)
+}
+
+// HasItem returns true if this collection has an item that is referenced by the given link
+func (collection *EntityCollection) HasItem(link string) bool {
+	return collection.Item(link) != nil
+}
+
+// Item returns the address of an item with matching link, or nil if no item exists
+func (c *EntityCollection) Item(link string) *Item {
+	for i := range c.Items {
+		if c.Items[i].Link == link {
+			return &c.Items[i]
+		}
+	}
+	return nil
 }

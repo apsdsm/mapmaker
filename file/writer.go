@@ -18,11 +18,11 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/apsdsm/mapmaker/placeholders"
+	"github.com/apsdsm/mapmaker/formats/json_format"
 )
 
 // Write will output a map as a file
-func Write(m *placeholders.Dungeon, path string) {
+func Write(m *json_format.Dungeon, path string) {
 	marshalled, _ := json.Marshal(m)
 	ioutil.WriteFile(path, marshalled, 0664)
 }

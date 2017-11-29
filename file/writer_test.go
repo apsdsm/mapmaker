@@ -21,8 +21,8 @@ import (
 	"reflect"
 
 	"github.com/apsdsm/mapmaker/file"
-	"github.com/apsdsm/mapmaker/placeholders"
 
+	"github.com/apsdsm/mapmaker/formats/json_format"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -34,12 +34,12 @@ var _ = Describe("MapWriter", func() {
 		// preemptive cleanup
 		_ = os.Remove(outputFilePath)
 
-		m := placeholders.NewDungeon(5, 5)
+		m := json_format.NewDungeon(5, 5)
 
 		file.Write(m, outputFilePath)
 
 		infile, _ := ioutil.ReadFile(outputFilePath)
-		var m2 placeholders.Dungeon
+		var m2 json_format.Dungeon
 		json.Unmarshal(infile, &m2)
 
 		Expect(reflect.DeepEqual(*m, m2)).To(BeTrue())

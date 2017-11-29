@@ -18,12 +18,12 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/apsdsm/mapmaker/placeholders"
+	"github.com/apsdsm/mapmaker/formats/placeholder"
 )
 
 // Read will read a file as a map
-func Read(path string) *placeholders.Map {
-	var m placeholders.Map
+func Read(path string) *placeholder.Map {
+	var m placeholder.Map
 	file, _ := ioutil.ReadFile(path)
 	json.Unmarshal(file, &m)
 	return &m

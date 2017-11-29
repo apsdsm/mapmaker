@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package placeholders
+package placeholder
 
-// A Tile is a single tile in a map
-type Tile struct {
-	Rune     rune
-	Walkable bool
-	Spawn    string
+// Line is a placeholder for each line of the structure part of a .map file
+type Line struct {
+	Cells         []*Cell
+	RawAnnoations string
+}
+
+// NewLine makes and returns a new line
+func NewLine(length int) Line {
+	line := Line{
+		Cells: make([]*Cell, length),
+	}
+	return line
 }

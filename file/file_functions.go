@@ -57,6 +57,6 @@ func unmarshalYaml(in []byte, out interface{}) {
 	err := yaml.Unmarshal(in, out)
 
 	if err != nil {
-		panic("error unmarshalling yaml")
+		panic("error unmarshalling yaml" + err.Error())
 	}
 }
