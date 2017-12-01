@@ -25,23 +25,21 @@ import (
 var _ = Describe("MapValidator", func() {
 
 	var (
-		errors   []file.Error
-		warnings []file.Error
+		errors []file.Error
+	//	warnings []file.Error
 	)
 
 	BeforeEach(func() {
 
 		// empty errors/warnings
 		errors = make([]file.Error, 0, 0)
-		warnings = make([]file.Error, 0, 0)
+		//	warnings = make([]file.Error, 0, 0)
 	})
 
 	It("returns error if cell contains mob that doesn't exist", func() {
-		// meta
 		meta := placeholder.Meta{}
 		meta.Name = "foo dungeon"
 
-		// dungeon
 		dungeon := placeholder.NewMap(1, 1)
 		dungeon.Grid[0][0] = placeholder.EmptyCell()
 		dungeon.Grid[0][0].Annotated = true
@@ -49,7 +47,6 @@ var _ = Describe("MapValidator", func() {
 		dungeon.Grid[0][0].Type = "mob"
 		dungeon.StartPosition = &placeholder.Position{0, 0}
 
-		// empty entity collection
 		entities := placeholder.NewEntityCollection()
 
 		errors, _ = file.ValidatePlaceholders(&meta, dungeon, &entities)
@@ -60,11 +57,9 @@ var _ = Describe("MapValidator", func() {
 	})
 
 	It("returns error if cell contains door that doesn't exist", func() {
-		// meta
 		meta := placeholder.Meta{}
 		meta.Name = "foo dungeon"
 
-		// dungeon
 		dungeon := placeholder.NewMap(1, 1)
 		dungeon.Grid[0][0] = placeholder.EmptyCell()
 		dungeon.Grid[0][0].Annotated = true
@@ -82,33 +77,37 @@ var _ = Describe("MapValidator", func() {
 		Expect(errors[0].Message).To(Equal("door_link is not defined by any entity."))
 	})
 
-	Context("Map rules", func() {
-		It("returns error if there is no start position", func() {
-			mapFile := "../fixtures/maps/empty_map.map"
+	It("returns error if there is no start position", func() {
+		meta := placeholder.Meta{}
+		meta.Name = "foo dungeon"
 
-			meta, dungeon := file.ImportMap(mapFile)
+		// dungeon with no start position
+		dungeon := placeholder.NewMap(1, 1)
+		dungeon.Grid[0][0] = placeholder.EmptyCell()
 
-			entities := placeholder.NewEntityCollection()
+		entities := placeholder.NewEntityCollection()
 
-			errors, _ := file.ValidatePlaceholders(meta, dungeon, &entities)
+		errors, _ := file.ValidatePlaceholders(&meta, dungeon, &entities)
 
-			Expect(len(errors)).To(Equal(1))
-			Expect(errors[0].LineNumber).To(Equal(-1))
-			Expect(errors[0].Message).To(Equal("map has no start position."))
-		})
+		Expect(len(errors)).To(Equal(1))
+		Expect(errors[0].LineNumber).To(Equal(-1))
+		Expect(errors[0].Message).To(Equal("map has no start position."))
 	})
 
-	Context("Meta rules", func() {
-		It("returns warning if there is no name", func() {
-			mapFile := "../fixtures/maps/identity.map"
-			meta, dungeon := file.ImportMap(mapFile)
-			entities := placeholder.NewEntityCollection()
+	It("returns warning if there is no name", func() {
+		meta := placeholder.Meta{}
 
-			_, warnings := file.ValidatePlaceholders(meta, dungeon, &entities)
+		dungeon := placeholder.NewMap(1, 1)
+		dungeon.Grid[0][0] = placeholder.EmptyCell()
+		dungeon.StartPosition = &placeholder.Position{0, 0}
 
-			Expect(len(warnings)).To(Equal(1))
-			Expect(warnings[0].LineNumber).To(Equal(-1))
-			Expect(warnings[0].Message).To(Equal("map has no name."))
-		})
+		entities := placeholder.NewEntityCollection()
+
+		errors, _ := file.ValidatePlaceholders(&meta, dungeon, &entities)
+
+		Expect(len(errors)).To(Equal(1))
+		//Expect(errors[0].IsWarning).To(BeTrue())
+		Expect(errors[0].LineNumber).To(Equal(-1))
+		Expect(errors[0].Message).To(Equal("map has no name."))
 	})
 })

@@ -28,8 +28,9 @@ func ValidatePlaceholders(mapMeta *placeholder.Meta, levelData *placeholder.Map,
 		warn := Error{
 			Message:    "map has no name.",
 			LineNumber: -1,
+			IsWarning:  true,
 		}
-		warnings = append(warnings, warn)
+		errors = append(warnings, warn)
 	}
 
 	// check for start point
@@ -47,7 +48,7 @@ func ValidatePlaceholders(mapMeta *placeholder.Meta, levelData *placeholder.Map,
 			err := validateCell(levelData.Grid[x][y], y+1, entities)
 
 			if err != nil {
-				if err.isWarning {
+				if err.IsWarning {
 					warnings = append(warnings, *err)
 				} else {
 					errors = append(errors, *err)
@@ -79,16 +80,6 @@ func validateCell(cell *placeholder.Cell, line int, entities *placeholder.Entity
 			return &Error{
 				Message:    cell.Link + " is not defined by any entity.",
 				LineNumber: line,
-			}
-		}
-
-		door := entities.GetDoor(cell.Link)
-
-		if door.NeedsKey() && !entities.HasKey(door.Key) {
-			return &Error{
-				Message:    cell.Link + " has no matching key entity.",
-				LineNumber: line,
-				isWarning:  true,
 			}
 		}
 	}
