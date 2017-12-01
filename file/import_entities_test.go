@@ -41,7 +41,7 @@ var _ = Describe("EntityImporter", func() {
 			errors, warnings = file.AddEntityToCollection("../fixtures/entities/mob.mob.yaml", &entities, errors, warnings)
 		})
 
-		It("loads mob", func() {
+		It("adds mob data", func() {
 			Expect(len(entities.Mobs)).To(Equal(1))
 			Expect(entities.Mobs[0].Name).To(Equal("Mob Name"))
 			Expect(entities.Mobs[0].Link).To(Equal("mob_link"))
@@ -49,7 +49,21 @@ var _ = Describe("EntityImporter", func() {
 			Expect(entities.Mobs[0].Hp).To(Equal("1"))
 			Expect(entities.Mobs[0].Mp).To(Equal("2"))
 			Expect(len(entities.Mobs[0].Loot)).To(Equal(3))
+		})
 
+		It("adds mob loot", func() {
+			Expect(len(entities.Mobs[0].ParsedLoot)).To(Equal(3))
+			Expect(entities.Mobs[0].ParsedLoot[0].Link).To(Equal("copper"))
+			Expect(entities.Mobs[0].ParsedLoot[0].MinHeld).To(Equal(10))
+			Expect(entities.Mobs[0].ParsedLoot[0].MaxHeld).To(Equal(10))
+
+			Expect(entities.Mobs[0].ParsedLoot[1].Link).To(Equal("gold"))
+			Expect(entities.Mobs[0].ParsedLoot[1].MinHeld).To(Equal(1))
+			Expect(entities.Mobs[0].ParsedLoot[1].MaxHeld).To(Equal(2))
+
+			Expect(entities.Mobs[0].ParsedLoot[2].Link).To(Equal("axe"))
+			Expect(entities.Mobs[0].ParsedLoot[2].MinHeld).To(Equal(1))
+			Expect(entities.Mobs[0].ParsedLoot[2].MaxHeld).To(Equal(1))
 		})
 
 		It("adds no errors", func() {

@@ -16,6 +16,7 @@ package file
 
 import (
 	"regexp"
+	"strconv"
 	"strings"
 
 	"path"
@@ -63,47 +64,57 @@ func AddEntityToCollection(path string, collection *placeholder.EntityCollection
 func addMobToCollection(bytes *[]byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
 	mob := placeholder.Mob{}
 	unmarshalYaml(*bytes, &mob)
-	collection.AddMobs(mob)
 
-	mob.ParsedLoot = make([]placeholder.Loot, len(mob.Loot))
+	mob.ParsedLoot = make([]placeholder.Loot, 0, len(mob.Loot))
 
 	for _, raw := range mob.Loot {
-		loot, err := parseLootString(raw)
+		loot, err := parseLootString(raw, resourcePath)
 
 		if err != nil {
-			err.FileName = resourcePath
 			errors = append(errors, *err)
 		} else {
 			mob.ParsedLoot = append(mob.ParsedLoot, loot)
 		}
 	}
 
+	collection.AddMobs(mob)
+
 	return errors, warnings
 }
 
 // parseLootString returns a loot object so long as the raw loot string is in a valid format
-func parseLootString(raw string) (placeholder.Loot, *Error) {
+func parseLootString(raw, resourcePath string) (placeholder.Loot, *Error) {
 
 	// the following regexps define a whitelist of valid item notations. Everything else is invalid.
-	r1 := regexp.MustCompile(`^.*\[\d+~\d+\]$`) // item[min~max]
-	r2 := regexp.MustCompile(`^.*\[\d+\]$`)     // item[amount]
-	r3 := regexp.MustCompile(`^\w*$`)           // item, item123, item_foo
+	r1 := regexp.MustCompile(`^(.*)\[(\d+)~(\d+)\]$`) // item[min~max]
+	r2 := regexp.MustCompile(`^(.*)\[(\d+)\]$`)       // item[amount]
+	r3 := regexp.MustCompile(`^(\w*)$`)               // item, item123, item_foo
 
 	if r1.MatchString(raw) {
-		return placeholder.Loot{}, nil
+		matches := r1.FindStringSubmatch(raw)
+		link := matches[1]
+		min, _ := strconv.Atoi(matches[2])
+		max, _ := strconv.Atoi(matches[3])
+		return placeholder.NewLoot(raw, link, min, max), nil
 	}
 
 	if r2.MatchString(raw) {
-		return placeholder.Loot{}, nil
+		matches := r2.FindStringSubmatch(raw)
+		link := matches[1]
+		amount, _ := strconv.Atoi(matches[2])
+		return placeholder.NewLoot(raw, link, amount, amount), nil
 	}
 
 	if r3.MatchString(raw) {
-		return placeholder.Loot{}, nil
+		matches := r3.FindStringSubmatch(raw)
+		link := matches[1]
+		return placeholder.NewLoot(raw, link, 1, 1), nil
 	}
 
 	return placeholder.Loot{}, &Error{
 		LineNumber: -1,
-		Message:    ("invalid item syntax: '" + raw + "'. Use notation: 'object_link[count]', 'object_link[min:max]', or 'object_link'"),
+		FileName:   resourcePath,
+		Message:    "invalid item syntax: '" + raw + "'. Use notation: 'object_link[count]', 'object_link[min:max]', or 'object_link'",
 	}
 }
 
