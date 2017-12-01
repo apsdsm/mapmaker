@@ -7,7 +7,6 @@ import (
 func ValidateEntities(col *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
 
 	for i := 0; i < len(col.Mobs); i++ {
-
 		mob := &col.Mobs[i]
 
 		// check for prototype
@@ -29,6 +28,19 @@ func ValidateEntities(col *placeholder.EntityCollection, errors []Error, warning
 
 				errors = append(errors, e)
 			}
+		}
+	}
+
+	for i := 0; i < len(col.Doors); i++ {
+		door := &col.Doors[i]
+
+		if door.NeedsKey() && !col.HasKey(door.Key) {
+			e := Error{
+				Message:    "door '" + door.Link + "' requires key '" + door.Key + "', which is not defined by any entity.",
+				LineNumber: -1,
+			}
+
+			errors = append(errors, e)
 		}
 	}
 

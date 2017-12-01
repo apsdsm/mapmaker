@@ -16,22 +16,8 @@ var _ = Describe("EntityValidator", func() {
 	)
 
 	BeforeEach(func() {
-
-		// empty errors/warnings
 		errors = make([]file.Error, 0, 0)
 		warnings = make([]file.Error, 0, 0)
-
-		// most basic valid meta
-		//	meta = placeholder.Meta{}
-		//	meta.Name = "foo dungeon"
-
-		//	// most basic valid dungeon
-		//	dungeon = placeholder.NewMap(1, 1)
-		//	fmt.Printf("the dungeon has this grid: %+v", dungeon)
-		//	dungeon.Grid[0][0] = placeholder.EmptyCell()
-		//	dungeon.Grid[0][0].Link = "mob"
-		//	dungeon.Grid[0][0].Type = "mob"
-		//	dungeon.StartPosition = &placeholder.Position{0, 0}
 	})
 
 	It("returns an error if a mob references a prototype that doesn't exist", func() {
@@ -62,7 +48,6 @@ var _ = Describe("EntityValidator", func() {
 		mob.ParsedLoot[0].MaxHeld = 1
 		mob.ParsedLoot[0].MinHeld = 1
 
-		// add mob to entities
 		entities := placeholder.NewEntityCollection()
 		entities.AddMobs(mob)
 
@@ -71,5 +56,22 @@ var _ = Describe("EntityValidator", func() {
 		Expect(len(errors)).To(Equal(1))
 		Expect(errors[0].LineNumber).To(Equal(-1))
 		Expect(errors[0].Message).To(Equal("mob 'mob' requires item 'foo', which is not defined by any entity."))
+	})
+
+	It("returns error if door uses a key that doesn't exist", func() {
+
+		// door with missing key
+		door := placeholder.Door{}
+		door.Link = "door_link"
+		door.Key = "key_link"
+
+		entities := placeholder.NewEntityCollection()
+		entities.AddDoors(door)
+
+		errors, _ := file.ValidateEntities(&entities, errors, warnings)
+
+		Expect(len(errors)).To(Equal(1))
+		Expect(errors[0].LineNumber).To(Equal(-1))
+		Expect(errors[0].Message).To(Equal("door 'door_link' requires key 'key_link', which is not defined by any entity."))
 	})
 })
