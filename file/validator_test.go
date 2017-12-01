@@ -24,51 +24,62 @@ import (
 
 var _ = Describe("MapValidator", func() {
 
-	Context("entity rules", func() {
-		It("returns error if map references mob that doesn't exist", func() {
-			source := "../fixtures/maps/map_with_one_mob.map"
+	var (
+		errors   []file.Error
+		warnings []file.Error
+	)
 
-			meta, dungeon := file.ImportMap(source)
-			entities := placeholder.NewEntityCollection()
+	BeforeEach(func() {
 
-			errors, _ := file.ValidatePlaceholders(meta, dungeon, &entities)
+		// empty errors/warnings
+		errors = make([]file.Error, 0, 0)
+		warnings = make([]file.Error, 0, 0)
+	})
 
-			Expect(len(errors)).To(Equal(1))
-			Expect(errors[0].LineNumber).To(Equal(1))
-			Expect(errors[0].Message).To(Equal("mob_link is not defined by any entity."))
-		})
+	It("returns error if cell contains mob that doesn't exist", func() {
+		// meta
+		meta := placeholder.Meta{}
+		meta.Name = "foo dungeon"
 
-		Context("door rules", func() {
-			It("returns error if door is referenced that doesn't exist", func() {
-				source := "../fixtures/maps/map_with_one_door.map"
+		// dungeon
+		dungeon := placeholder.NewMap(1, 1)
+		dungeon.Grid[0][0] = placeholder.EmptyCell()
+		dungeon.Grid[0][0].Annotated = true
+		dungeon.Grid[0][0].Link = "mob"
+		dungeon.Grid[0][0].Type = "mob"
+		dungeon.StartPosition = &placeholder.Position{0, 0}
 
-				meta, dungeon := file.ImportMap(source)
-				entities := placeholder.NewEntityCollection()
+		// empty entity collection
+		entities := placeholder.NewEntityCollection()
 
-				errors, _ := file.ValidatePlaceholders(meta, dungeon, &entities)
+		errors, _ = file.ValidatePlaceholders(&meta, dungeon, &entities)
 
-				Expect(len(errors)).To(Equal(1))
-				Expect(errors[0].LineNumber).To(Equal(1))
-				Expect(errors[0].Message).To(Equal("door_link is not defined by any entity."))
-			})
+		Expect(len(errors)).To(Equal(1))
+		Expect(errors[0].LineNumber).To(Equal(1))
+		Expect(errors[0].Message).To(Equal("mob is not defined by any entity."))
+	})
 
-			It("returns warning if door uses a key that doesn't exist", func() {
-				source := "../fixtures/maps/map_with_one_door.map"
-				entFile := "../fixtures/entities/door.door.yaml"
+	It("returns error if cell contains door that doesn't exist", func() {
+		// meta
+		meta := placeholder.Meta{}
+		meta.Name = "foo dungeon"
 
-				meta, dungeon := file.ImportMap(source)
-				entities := placeholder.NewEntityCollection()
-				errors := make([]file.Error, 0, 0)
-				warnings := make([]file.Error, 0, 0)
-				errors, warnings = file.AddEntityToCollection(entFile, &entities, errors, warnings)
+		// dungeon
+		dungeon := placeholder.NewMap(1, 1)
+		dungeon.Grid[0][0] = placeholder.EmptyCell()
+		dungeon.Grid[0][0].Annotated = true
+		dungeon.Grid[0][0].Link = "door_link"
+		dungeon.Grid[0][0].Type = "door"
+		dungeon.StartPosition = &placeholder.Position{0, 0}
 
-				errors, warnings = file.ValidatePlaceholders(meta, dungeon, &entities)
+		// empty entity collection
+		entities := placeholder.NewEntityCollection()
 
-				Expect(len(warnings)).To(Equal(1))
-				Expect(warnings[0].LineNumber).To(Equal(1))
-				Expect(warnings[0].Message).To(Equal("door_link has no matching key entity."))
-			})
-		})
+		errors, _ = file.ValidatePlaceholders(&meta, dungeon, &entities)
+
+		Expect(len(errors)).To(Equal(1))
+		Expect(errors[0].LineNumber).To(Equal(1))
+		Expect(errors[0].Message).To(Equal("door_link is not defined by any entity."))
 	})
 
 	Context("Map rules", func() {
