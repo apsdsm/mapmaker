@@ -53,6 +53,9 @@ func main() {
 
 	app.Action = func(c *cli.Context) error {
 
+		errors := make([]file.Error, 0, 10)
+		warnings := make([]file.Error, 0, 10)
+
 		// if no make file stop
 		if entitiesFile == "" {
 			return cli.NewExitError("no makefile supplied", 1)
@@ -74,11 +77,11 @@ func main() {
 
 		fmt.Println("importing entities...")
 
-		entityPlaceholders := file.ImportEntities(entitiesFile)
+		entityPlaceholders, errors, warnings := file.ImportEntities(entitiesFile, errors, warnings)
 
 		fmt.Println("validating...")
 
-		errors, warnings := file.ValidatePlaceholders(metaPlaceholders, mapPlaceholders, entityPlaceholders)
+		errors, warnings = file.ValidatePlaceholders(metaPlaceholders, mapPlaceholders, entityPlaceholders)
 
 		fmt.Println("errors:")
 		fmt.Println(len(errors))
