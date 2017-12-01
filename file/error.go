@@ -19,5 +19,5 @@ type Error struct {
 	Message    string
 	FileName   string
 	LineNumber int
-	isWarning  bool
+	IsWarning  bool
 }
