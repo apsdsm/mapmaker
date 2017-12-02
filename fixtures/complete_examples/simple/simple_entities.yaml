@@ -5,3 +5,4 @@ include:
   - ./entities/door2.door.yaml
   - ./entities/door2key.key.yaml
   - ./entities/goblin.mob.yaml
+  - ./entities/copper.item.yaml
