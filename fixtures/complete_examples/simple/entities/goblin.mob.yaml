@@ -1,6 +1,6 @@
 link: goblin
 rune: g
-loot: []
+loot:
+  - copper[1~5]
 hp: 10
 mp: 0
-on_die: general_ondie
