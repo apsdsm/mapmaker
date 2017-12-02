@@ -27,7 +27,6 @@ var _ = Describe("EntityValidator", func() {
 		mob.Link = "mob"
 		mob.Prot = "foo"
 
-		// add mob to entities
 		entities := placeholder.NewEntityCollection()
 		entities.AddMobs(mob)
 
