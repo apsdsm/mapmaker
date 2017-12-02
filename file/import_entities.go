@@ -19,6 +19,8 @@ import (
 	"strconv"
 	"strings"
 
+	yaml "gopkg.in/yaml.v2"
+
 	"path"
 
 	"github.com/apsdsm/mapmaker/formats/placeholder"
@@ -29,10 +31,15 @@ import (
 func ImportEntities(filePath string, errors []Error, warnings []Error) (*placeholder.EntityCollection, []Error, []Error) {
 	absPath := absPath(filePath)
 	bytes := readBytes(absPath)
+
 	collection := placeholder.NewEntityCollection()
 	makeList := placeholder.MakeList{}
 
-	unmarshalYaml(*bytes, &makeList)
+	err := yaml.Unmarshal(*bytes, &makeList)
+
+	if err != nil {
+		panic("error unmarshalling yaml" + err.Error())
+	}
 
 	for _, include := range makeList.Include {
 		includePath := path.Join(path.Dir(absPath), include)
@@ -51,11 +58,9 @@ func AddEntityToCollection(path string, collection *placeholder.EntityCollection
 	if strings.Contains(path, ".mob.") {
 		errors, warnings = addMobToCollection(bytes, path, collection, errors, warnings)
 	} else if strings.Contains(path, ".door.") {
-		addDoorToCollection(bytes, collection)
-	} else if strings.Contains(path, ".key.") {
-		addKeyToCollection(bytes, collection)
+		errors, warnings = addDoorToCollection(bytes, path, collection, errors, warnings)
 	} else if strings.Contains(path, ".item.") {
-		errors, warnings = addItemToCollection(bytes, collection, errors, warnings)
+		errors, warnings = addItemToCollection(bytes, path, collection, errors, warnings)
 	}
 	return errors, warnings
 }
@@ -63,7 +68,19 @@ func AddEntityToCollection(path string, collection *placeholder.EntityCollection
 // addMobToCollection adds a mob to the specified collection
 func addMobToCollection(bytes *[]byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
 	mob := placeholder.Mob{}
-	unmarshalYaml(*bytes, &mob)
+	err := yaml.Unmarshal(*bytes, &mob)
+
+	if err != nil {
+		e := Error{
+			LineNumber: -1,
+			Message:    "unable to unmarshal yaml. Received error: " + err.Error(),
+			FileName:   resourcePath,
+		}
+
+		errors := append(errors, e)
+
+		return errors, warnings
+	}
 
 	mob.ParsedLoot = make([]placeholder.Loot, 0, len(mob.Loot))
 
@@ -119,23 +136,44 @@ func parseLootString(raw, resourcePath string) (placeholder.Loot, *Error) {
 }
 
 // addDoorToCollection adds a door to the specified collection
-func addDoorToCollection(bytes *[]byte, collection *placeholder.EntityCollection) {
+func addDoorToCollection(bytes *[]byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
 	door := placeholder.Door{}
-	unmarshalYaml(*bytes, &door)
-	collection.Doors = append(collection.Doors, door)
-}
+	err := yaml.Unmarshal(*bytes, &door)
 
-// addKeyToCollection adds a key to the specified collection
-func addKeyToCollection(bytes *[]byte, collection *placeholder.EntityCollection) {
-	key := placeholder.Key{}
-	unmarshalYaml(*bytes, &key)
-	collection.Keys = append(collection.Keys, key)
+	if err != nil {
+		e := Error{
+			LineNumber: -1,
+			Message:    "unable to unmarshal yaml. Received error: " + err.Error(),
+			FileName:   resourcePath,
+		}
+
+		errors := append(errors, e)
+
+		return errors, warnings
+	}
+
+	collection.Doors = append(collection.Doors, door)
+
+	return errors, warnings
 }
 
 // addItemToCollection adds an item to the specified collection
-func addItemToCollection(bytes *[]byte, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
+func addItemToCollection(bytes *[]byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
 	item := placeholder.Item{}
-	unmarshalYaml(*bytes, &item)
+	err := yaml.Unmarshal(*bytes, &item)
+
+	if err != nil {
+		e := Error{
+			LineNumber: -1,
+			Message:    "unable to unmarshal yaml. Received error: " + err.Error(),
+			FileName:   resourcePath,
+		}
+
+		errors := append(errors, e)
+
+		return errors, warnings
+	}
+
 	collection.Items = append(collection.Items, item)
 
 	return errors, warnings

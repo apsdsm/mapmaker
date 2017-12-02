@@ -15,31 +15,10 @@
 package file
 
 import (
-	"io/ioutil"
-	"os"
 	"path/filepath"
 
 	"gopkg.in/yaml.v2"
 )
-
-// readBytes will read and return the bytes from a file path and panic if it can't
-func readBytes(filePath string) *[]byte {
-	file, err := os.Open(filePath)
-
-	defer file.Close()
-
-	if err != nil {
-		panic("error while opening file: " + err.Error())
-	}
-
-	bytes, err := ioutil.ReadAll(file)
-
-	if err != nil {
-		panic("error while reading data from file: " + err.Error())
-	}
-
-	return &bytes
-}
 
 // absPath will run abspath on a path string and panic if it can't
 func absPath(filePath string) string {
