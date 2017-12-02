@@ -113,22 +113,6 @@ var _ = Describe("EntityImporter", func() {
 		})
 	})
 
-	Context("importing valid key", func() {
-		It("loads a yaml file of key", func() {
-			source := "../fixtures/entities/key.key.yaml"
-
-			entities := placeholder.NewEntityCollection()
-			errors := make([]file.Error, 0, 0)
-			warnings := make([]file.Error, 0, 0)
-			errors, warnings = file.AddEntityToCollection(source, &entities, errors, warnings)
-
-			Expect(len(entities.Keys)).To(Equal(1))
-			Expect(entities.Keys[0].Name).To(Equal("Normal Key"))
-			Expect(entities.Keys[0].Link).To(Equal("normal_key"))
-			Expect(entities.Keys[0].Desc).To(Equal("A normal key"))
-		})
-	})
-
 	Context("importing valid item", func() {
 		It("loads yaml for item", func() {
 			source := "../fixtures/entities/key.item.yaml"
@@ -157,8 +141,8 @@ var _ = Describe("EntityImporter", func() {
 
 			entities, errors, warnings := file.ImportEntities(source, errors, warnings)
 
-			Expect(len(entities.Keys)).To(Equal(1))
-			Expect(entities.Keys[0].Link).To(Equal("normal_key"))
+			Expect(len(entities.Items)).To(Equal(1))
+			Expect(entities.Items[0].Link).To(Equal("foo_item"))
 
 			Expect(len(entities.Mobs)).To(Equal(1))
 			Expect(entities.Mobs[0].Link).To(Equal("mob_link"))
