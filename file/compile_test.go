@@ -35,7 +35,7 @@ var _ = Describe("Compiler", func() {
 
 		entities := placeholder.NewEntityCollection()
 
-		compiled := CompileLevel(&meta, dungeon, &entities)
+		compiled := Compile(&meta, dungeon, &entities)
 
 		Expect(compiled.Link).To(Equal("meta_link"))
 		Expect(compiled.Name).To(Equal("meta_name"))
@@ -52,7 +52,7 @@ var _ = Describe("Compiler", func() {
 
 		entities := placeholder.NewEntityCollection()
 
-		compiled := CompileLevel(&meta, dungeon, &entities)
+		compiled := Compile(&meta, dungeon, &entities)
 
 		Expect(compiled.Tiles[0][0].Walkable).To(BeFalse())
 		Expect(compiled.Tiles[0][1].Walkable).To(BeTrue())
@@ -68,7 +68,7 @@ var _ = Describe("Compiler", func() {
 		entities.AddDoors(placeholder.Door{})
 		entities.AddItems(placeholder.Item{})
 
-		compiled := CompileLevel(&meta, dungeon, &entities)
+		compiled := Compile(&meta, dungeon, &entities)
 
 		Expect(len(compiled.Doors)).To(Equal(1))
 		Expect(len(compiled.Mobs)).To(Equal(1))
@@ -86,7 +86,7 @@ var _ = Describe("Compiler", func() {
 
 		entities := placeholder.NewEntityCollection()
 
-		compiled := CompileLevel(&meta, dungeon, &entities)
+		compiled := Compile(&meta, dungeon, &entities)
 
 		Expect(compiled.Tiles[0][0].Spawn).To(Equal("mob_link"))
 	})
@@ -100,7 +100,7 @@ var _ = Describe("Compiler", func() {
 
 		entities := placeholder.NewEntityCollection()
 
-		compiled := CompileLevel(&meta, dungeon, &entities)
+		compiled := Compile(&meta, dungeon, &entities)
 
 		Expect(compiled.StartPosition).To(Equal(json_format.Position{1, 1}))
 	})

@@ -19,8 +19,8 @@ import (
 	"github.com/apsdsm/mapmaker/formats/placeholder"
 )
 
-// CompileLevel converts placeholder information to a map file that can be saved as json
-func CompileLevel(metaData *placeholder.Meta, mapData *placeholder.Map, entities *placeholder.EntityCollection) *json_format.Dungeon {
+// Compile converts placeholder information to a map file that can be saved as json
+func Compile(metaData *placeholder.Meta, mapData *placeholder.Map, entities *placeholder.EntityCollection) *json_format.Dungeon {
 	m := json_format.NewDungeon(mapData.Width, mapData.Height)
 
 	// copy tile data
