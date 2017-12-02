@@ -1,0 +1,6 @@
+link: foo_item
+type: foo
+name: Foo Item
+desc: Foo Description
+size: 10
+uniq: false

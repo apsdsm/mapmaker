@@ -1,6 +1,6 @@
 name: Basic makelist
 desc: makefile that calls in two entities
 include:
-  - ../entities/key.key.yaml
+  - ../entities/item.item.yaml
   - ../entities/mob.mob.yaml
   - ../entities/door.door.yaml
