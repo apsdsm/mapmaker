@@ -49,7 +49,7 @@ var _ = Describe("MapValidator", func() {
 
 		entities := placeholder.NewEntityCollection()
 
-		errors, _ = file.ValidatePlaceholders(&meta, dungeon, &entities)
+		errors, _ = file.ValidateDungeon(&meta, dungeon, &entities)
 
 		Expect(len(errors)).To(Equal(1))
 		Expect(errors[0].LineNumber).To(Equal(1))
@@ -70,7 +70,7 @@ var _ = Describe("MapValidator", func() {
 		// empty entity collection
 		entities := placeholder.NewEntityCollection()
 
-		errors, _ = file.ValidatePlaceholders(&meta, dungeon, &entities)
+		errors, _ = file.ValidateDungeon(&meta, dungeon, &entities)
 
 		Expect(len(errors)).To(Equal(1))
 		Expect(errors[0].LineNumber).To(Equal(1))
@@ -87,7 +87,7 @@ var _ = Describe("MapValidator", func() {
 
 		entities := placeholder.NewEntityCollection()
 
-		errors, _ := file.ValidatePlaceholders(&meta, dungeon, &entities)
+		errors, _ := file.ValidateDungeon(&meta, dungeon, &entities)
 
 		Expect(len(errors)).To(Equal(1))
 		Expect(errors[0].LineNumber).To(Equal(-1))
@@ -103,7 +103,7 @@ var _ = Describe("MapValidator", func() {
 
 		entities := placeholder.NewEntityCollection()
 
-		errors, _ := file.ValidatePlaceholders(&meta, dungeon, &entities)
+		errors, _ := file.ValidateDungeon(&meta, dungeon, &entities)
 
 		Expect(len(errors)).To(Equal(1))
 		//Expect(errors[0].IsWarning).To(BeTrue())

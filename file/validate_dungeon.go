@@ -18,8 +18,8 @@ import (
 	"github.com/apsdsm/mapmaker/formats/placeholder"
 )
 
-// ValidatePlaceholders will run all map data through a set of validations to make sure nothing is broken
-func ValidatePlaceholders(mapMeta *placeholder.Meta, levelData *placeholder.Map, entities *placeholder.EntityCollection) (errors []Error, warnings []Error) {
+// ValidateDungeon will run all map data through a set of validations to make sure nothing is broken
+func ValidateDungeon(mapMeta *placeholder.Meta, levelData *placeholder.Map, entities *placeholder.EntityCollection) (errors []Error, warnings []Error) {
 	errors = make([]Error, 0, 10)
 	warnings = make([]Error, 0, 10)
 
