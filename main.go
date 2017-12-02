@@ -73,7 +73,7 @@ func main() {
 
 		fmt.Println("importing map and meta...")
 
-		metaPlaceholders, mapPlaceholders := file.ImportMap(mapFile)
+		metaPlaceholders, mapPlaceholders := file.ImportDungeon(mapFile)
 
 		fmt.Println("importing entities...")
 
@@ -81,7 +81,7 @@ func main() {
 
 		fmt.Println("validating...")
 
-		errors, warnings = file.ValidatePlaceholders(metaPlaceholders, mapPlaceholders, entityPlaceholders)
+		errors, warnings = file.ValidateDungeon(metaPlaceholders, mapPlaceholders, entityPlaceholders)
 
 		fmt.Println("errors:")
 		fmt.Println(len(errors))
@@ -97,7 +97,7 @@ func main() {
 		fmt.Println("warnings:")
 		fmt.Println(len(warnings))
 
-		compiled := file.CompileLevel(metaPlaceholders, mapPlaceholders, entityPlaceholders)
+		compiled := file.Compile(metaPlaceholders, mapPlaceholders, entityPlaceholders)
 
 		file.Write(compiled, output)
 
