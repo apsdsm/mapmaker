@@ -17,6 +17,7 @@ package file
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 
 	"github.com/apsdsm/mapmaker/formats/placeholder"
 )
@@ -27,4 +28,23 @@ func Read(path string) *placeholder.Map {
 	file, _ := ioutil.ReadFile(path)
 	json.Unmarshal(file, &m)
 	return &m
+}
+
+// readBytes will read and return the bytes from a file path and panic if it can't
+func readBytes(filePath string) *[]byte {
+	file, err := os.Open(filePath)
+
+	defer file.Close()
+
+	if err != nil {
+		panic("error while opening file: " + err.Error())
+	}
+
+	bytes, err := ioutil.ReadAll(file)
+
+	if err != nil {
+		panic("error while reading data from file: " + err.Error())
+	}
+
+	return &bytes
 }
