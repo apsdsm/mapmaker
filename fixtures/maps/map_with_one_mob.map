@@ -4,4 +4,4 @@ name: Map With One Mob
 desc: A map that only contains a single mob.
 ---
 
-sm // m:mob_link
+m // m:mob_link

@@ -1,5 +1,0 @@
-name: Small entity list
-desc: entity list for small map
-include:
-  - ./entities/goblin.mob.yaml
-  - ./entities/goblin_prot.mob.yaml

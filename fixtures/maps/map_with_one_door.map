@@ -4,5 +4,5 @@ name: Map With One Door
 desc: A map that only contains a single door.
 ---
 
-sd // d:door_link
+d // d:door_link
 

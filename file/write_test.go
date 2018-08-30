@@ -22,7 +22,7 @@ import (
 
 	"github.com/apsdsm/mapmaker/file"
 
-	"github.com/apsdsm/mapmaker/formats/json_format"
+	"github.com/apsdsm/mapmaker/formats/output"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -34,12 +34,12 @@ var _ = Describe("MapWriter", func() {
 		// preemptive cleanup
 		_ = os.Remove(outputFilePath)
 
-		m := json_format.NewDungeon(5, 5)
+		m := output.NewDungeon(5, 5)
 
 		file.Write(m, outputFilePath)
 
 		infile, _ := ioutil.ReadFile(outputFilePath)
-		var m2 json_format.Dungeon
+		var m2 output.Dungeon
 		json.Unmarshal(infile, &m2)
 
 		Expect(reflect.DeepEqual(*m, m2)).To(BeTrue())

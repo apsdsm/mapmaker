@@ -1,0 +1,4 @@
+name: items
+desc: entity list for items
+include:
+  - ../entities/copper.item.yaml

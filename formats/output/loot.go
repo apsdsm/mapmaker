@@ -1,4 +1,4 @@
-package json_format
+package output
 
 // Loot contains information about an object held by a mob
 type Loot struct {

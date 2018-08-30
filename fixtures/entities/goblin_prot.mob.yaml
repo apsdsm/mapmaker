@@ -1,10 +1,15 @@
+#description
 name: Goblin
 link: goblin_prot
 rune: m
 
+#stats
+hp: 5
+mp: 10
+
 #inventory
 loot:
-  - copper:1-10
+  - copper[1~5]
 
 # movement
 

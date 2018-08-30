@@ -1,5 +1,3 @@
-// Copyright 2017 Nick del Pozo
-//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,17 +10,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package file
+package output
 
-import (
-	"encoding/json"
-	"io/ioutil"
+// Mob is a placeholder for mob entities in a level
+type Mob struct {
+	Name string
+	Link string
+	Prot string
+	Rune string
+	Loot []Loot
+	Hp   string
+	Mp   string
+}
 
-	"github.com/apsdsm/mapmaker/formats/output"
-)
-
-// Write will output a map as a file
-func Write(m *output.Dungeon, path string) {
-	marshalled, _ := json.Marshal(m)
-	ioutil.WriteFile(path, marshalled, 0664)
+// NeedsPrototype returns true if the mob requires a prototype entity
+func (mob *Mob) NeedsPrototype() bool {
+	return mob.Prot != ""
 }

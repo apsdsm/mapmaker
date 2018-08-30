@@ -12,20 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package json_format
+package output
 
-// Mob is a placeholder for mob entities in a level
-type Mob struct {
-	Name string
-	Link string
-	Prot string
-	Rune string
-	Loot []Loot
-	Hp   string
-	Mp   string
-}
-
-// NeedsPrototype returns true if the mob requires a prototype entity
-func (mob *Mob) NeedsPrototype() bool {
-	return mob.Prot != ""
+// A Tile is a single tile in a map
+type Tile struct {
+	Rune     rune
+	Walkable bool
+	Spawn    string
 }

@@ -4,8 +4,8 @@ name: The Jovian Prison
 desc: A gloomy building hidden deep in the Jovian woods.
 ---
 
-#######
-# m   # // m:mob_link
-##d#### // d:door_link
-# w s # // w:waypoint1
-#######
+s
+m // m:mob1
+d // d:door1
+w // w:waypoint1
+i // i:item1

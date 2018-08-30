@@ -248,6 +248,8 @@ func getEntityType(key string) string {
 		return "waypoint"
 	case "s":
 		return "start"
+	case "i":
+		return "item"
 	}
 
 	panic(key + " is an unknown annotation target type")
