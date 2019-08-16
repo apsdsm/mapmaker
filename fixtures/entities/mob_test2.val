@@ -1,0 +1,59 @@
+mob goblin < beast
+    name Goblin
+    hp   12
+    mp   34
+    loot
+        - copper[10]
+        - gold[1..2]
+        - axe
+
+// mob: beast
+//     // display
+//     rune: g
+//     name: A Wild Beast
+//
+//     // inventory
+//     loot:
+//         copper[1..5]
+//
+//     // events
+//     events:
+//         on_die: goblin_on_die
+//         on_notice: goblin_on_notice
+//
+// script: goblin_on_die
+//     random:
+//         owner says: "dead!"
+//         owner says: "dead2!"
+//         owner says: "dead3!"
+//
+// script: goblin_on_notice
+//     random:
+//         owner says: saw something over there!
+//         do nothing
+//
+//     weighted:
+//         40 do nothing
+//         20 owner says: "wha?"
+//         5 owner says "who?"
+//
+// // an old door
+// door old_door:
+//     locked: true
+//
+//     key: old_door_key
+//
+//     desc:
+//         A very old door made of wood or plastic or steel or something.
+//         It looks like the kind of thing you'd write in a cheap description.
+//
+//     on_try:
+//         old_door_on_try // have multiple scripts triggering possible
+//
+// // key for the old door
+// item old_door_key:
+//     type: key
+//     name: A Small Key
+//     desc: A regular key
+//     size: 1
+//     uniq: true

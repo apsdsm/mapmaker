@@ -21,9 +21,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"gopkg.in/yaml.v2"
-
 	"github.com/apsdsm/mapmaker/formats/placeholder"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
@@ -202,7 +201,7 @@ func getPartsFromRawLine(text string) (mapData string, annotations []placeholder
 	parts := strings.Split(text, "//")
 
 	if len(parts) > 0 {
-		mapData = parts[0]
+		mapData = strings.TrimRight(parts[0], " ")
 	}
 
 	if len(parts) > 1 {

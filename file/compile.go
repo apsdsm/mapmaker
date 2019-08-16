@@ -88,12 +88,12 @@ func mobsToJSON(mobs []placeholder.Mob) []output.Mob {
 			Link: mobs[i].Link,
 			Prot: mobs[i].Prot,
 			Rune: mobs[i].Rune,
-			Loot: make([]output.Loot, len(mobs[i].ParsedLoot))
+			Loot: make([]output.Loot, len(mobs[i].ParsedLoot)),
 		}
 
 		for j := range mobs[i].ParsedLoot {
-			newMob.Loot[j] = output.Loot {
-				Link: mobs[i].ParsedLoot[j].Link,
+			newMob.Loot[j] = output.Loot{
+				Link:    mobs[i].ParsedLoot[j].Link,
 				MinHeld: mobs[i].ParsedLoot[j].MinHeld,
 				MaxHeld: mobs[i].ParsedLoot[j].MaxHeld,
 			}

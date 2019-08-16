@@ -1,0 +1,19 @@
+mob goblin
+    name Goblin
+    hp   12
+    mp   34
+    loot
+        - copper[10]
+        - gold[1..2]
+        - axe
+
+// comment line
+// comment line
+
+/*
+don't read me
+*/
+
+read me!
+
+/* don't read me */

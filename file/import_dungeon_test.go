@@ -13,60 +13,56 @@
 package file_test
 
 import (
-	"github.com/apsdsm/mapmaker/file"
+	"testing"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/apsdsm/mapmaker/file"
 )
 
-var _ = Describe("MapImporter", func() {
-	It("loads the metadata at the top of a map file into a placeholder", func() {
-		meta, _ := file.ImportDungeon("../fixtures/maps/meta_only.map")
+func TestMapImporter(t *testing.T) {
 
-		Expect(meta.Link).To(Equal("prison"))
-		Expect(meta.Name).To(Equal("The Jovian Prison"))
-		Expect(meta.Desc).To(Equal("A gloomy building hidden deep in the Jovian woods."))
+	meta, level := file.ImportDungeon("../fixtures/maps/meta_and_map.map")
+
+	t.Run("it loads a metadata", func(t *testing.T) {
+		assert.Equal(t, "prison", meta.Link)
+		assert.Equal(t, meta.Name, "The Jovian Prison")
+		assert.Equal(t, meta.Desc, "A gloomy building hidden deep in the Jovian woods.")
 	})
 
-	It("loads the dungeon after metadata into a placeholder", func() {
-		_, level := file.ImportDungeon("../fixtures/maps/meta_and_map.map")
-
-		Expect(level.Width).To(Equal(3))
-		Expect(level.Height).To(Equal(3))
-		Expect(len(level.Grid)).To(Equal(level.Width))
+	t.Run("it loads layout", func(t *testing.T) {
+		assert.Equal(t, 11, level.Width)
+		assert.Equal(t, 7, level.Height)
+		assert.Equal(t, level.Width, len(level.Grid))
 
 		for i := range level.Grid {
-			Expect(len(level.Grid[i])).To(Equal(level.Height))
+			assert.Equal(t, level.Height, len(level.Grid[i]))
 		}
 	})
 
-	It("loads the metadata after each line of map content", func() {
-		_, level := file.ImportDungeon("../fixtures/maps/meta_and_annotated_map.map")
+	t.Run("it loads line metadata", func(t *testing.T) {
+		assert.Equal(t, "mob", level.Grid[2][3].Type)
+		assert.Equal(t, "mob1", level.Grid[2][3].Link)
 
-		Expect(level.Grid[0][1].Type).To(Equal("mob"))
-		Expect(level.Grid[0][1].Link).To(Equal("mob1"))
+		assert.Equal(t, "door", level.Grid[6][1].Type)
+		assert.Equal(t, "door1", level.Grid[6][1].Link)
 
-		Expect(level.Grid[0][2].Type).To(Equal("door"))
-		Expect(level.Grid[0][2].Link).To(Equal("door1"))
+		assert.Equal(t, "waypoint", level.Grid[2][4].Type)
+		assert.Equal(t, "waypoint1", level.Grid[2][4].Link)
 
-		Expect(level.Grid[0][3].Type).To(Equal("waypoint"))
-		Expect(level.Grid[0][3].Link).To(Equal("waypoint1"))
-
-		Expect(level.Grid[0][4].Type).To(Equal("item"))
-		Expect(level.Grid[0][4].Link).To(Equal("item1"))
+		assert.Equal(t, "item", level.Grid[2][5].Type)
+		assert.Equal(t, "item1", level.Grid[2][5].Link)
 	})
 
-	It("assigns a start position if it finds one", func() {
-		_, dungeon := file.ImportDungeon("../fixtures/maps/map_with_start.map")
-
-		Expect(dungeon.StartPosition).ToNot(BeNil())
-		Expect(dungeon.StartPosition.X).To(Equal(1))
-		Expect(dungeon.StartPosition.Y).To(Equal(1))
+	t.Run("it assigns a start position", func(t *testing.T) {
+		assert.Equal(t, 2, level.StartPosition.X)
+		assert.Equal(t, 1, level.StartPosition.Y)
 	})
 
-	It("sets the rune value to ' ' if cell contains entity", func() {
-		_, dungeon := file.ImportDungeon("../fixtures/maps/map_with_one_mob.map")
-
-		Expect(dungeon.Grid[0][0].Rune).To(Equal(' '))
+	t.Run("it sets rule value to ' ' if cell contains entity", func(t *testing.T) {
+		assert.Equal(t, ' ', level.Grid[2][3].Rune, "mob entity rune should be blank")
+		assert.Equal(t, ' ', level.Grid[6][1].Rune, "door entity rune should be blank")
+		assert.Equal(t, ' ', level.Grid[2][4].Rune, "waypoint entity rune should be blank")
+		assert.Equal(t, ' ', level.Grid[2][5].Rune, "item entity rune should be blank")
 	})
-})
+}

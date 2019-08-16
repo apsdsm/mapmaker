@@ -40,7 +40,7 @@ func NewCellFromRune(r rune) *Cell {
 
 // IsEntity returns true if the cell contains an entity rune
 func (c *Cell) IsEntity() bool {
-	for _, t := range []rune{'m', 'd', 'w', 's'} {
+	for _, t := range []rune{'m', 'd', 'w', 's', 'i'} {
 		if c.Rune == t {
 			return true
 		}
