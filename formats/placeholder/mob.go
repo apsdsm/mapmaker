@@ -16,17 +16,18 @@ package placeholder
 
 // Mob is a placeholder for mob entities in a level
 type Mob struct {
-	Name       string
-	Link       string
-	Prot       string
-	Rune       string
-	Loot       []string
-	ParsedLoot []Loot
-	Hp         string
-	Mp         string
+	Name       string            `yaml:"name"`
+	Reference  string            `yaml:"-"`
+	Prototype  string            `yaml:"prototype"`
+	Rune       string            `yaml:"rune"`
+	Loot       []string          `yaml:"loot"`
+	ParsedLoot []Loot            `yaml:"-"`
+	Hp         int               `yaml:"hp"`
+	Mp         int               `yaml:"mp"`
+	Events     map[string]string `yaml:"events"`
 }
 
 // NeedsPrototype returns true if the mob requires a prototype entity
 func (mob *Mob) NeedsPrototype() bool {
-	return mob.Prot != ""
+	return mob.Prototype != ""
 }

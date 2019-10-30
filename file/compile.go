@@ -85,8 +85,8 @@ func mobsToJSON(mobs []placeholder.Mob) []output.Mob {
 
 		newMob := output.Mob{
 			Name: mobs[i].Name,
-			Link: mobs[i].Link,
-			Prot: mobs[i].Prot,
+			Link: mobs[i].Reference,
+			Prot: mobs[i].Prototype,
 			Rune: mobs[i].Rune,
 			Loot: make([]output.Loot, len(mobs[i].ParsedLoot)),
 		}

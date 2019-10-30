@@ -31,7 +31,7 @@ func Read(path string) *placeholder.Map {
 }
 
 // readBytes will read and return the bytes from a file path and panic if it can't
-func readBytes(filePath string) *[]byte {
+func readBytes(filePath string) []byte {
 	file, err := os.Open(filePath)
 
 	defer file.Close()
@@ -46,5 +46,5 @@ func readBytes(filePath string) *[]byte {
 		panic("error while reading data from file: " + err.Error())
 	}
 
-	return &bytes
+	return bytes
 }

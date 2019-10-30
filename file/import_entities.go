@@ -35,7 +35,7 @@ func ImportEntities(filePath string, errors []Error, warnings []Error) (*placeho
 	collection := placeholder.NewEntityCollection()
 	makeList := placeholder.MakeList{}
 
-	err := yaml.Unmarshal(*bytes, &makeList)
+	err := yaml.Unmarshal(bytes, &makeList)
 
 	if err != nil {
 		panic("error unmarshalling yaml" + err.Error())
@@ -66,9 +66,9 @@ func AddEntityToCollection(path string, collection *placeholder.EntityCollection
 }
 
 // addMobToCollection adds a mob to the specified collection
-func addMobToCollection(bytes *[]byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
+func addMobToCollection(bytes []byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
 	mob := placeholder.Mob{}
-	err := yaml.Unmarshal(*bytes, &mob)
+	err := yaml.Unmarshal(bytes, &mob)
 
 	if err != nil {
 		e := Error{
@@ -136,9 +136,9 @@ func parseLootString(raw, resourcePath string) (placeholder.Loot, *Error) {
 }
 
 // addDoorToCollection adds a door to the specified collection
-func addDoorToCollection(bytes *[]byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
+func addDoorToCollection(bytes []byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
 	door := placeholder.Door{}
-	err := yaml.Unmarshal(*bytes, &door)
+	err := yaml.Unmarshal(bytes, &door)
 
 	if err != nil {
 		e := Error{
@@ -158,9 +158,9 @@ func addDoorToCollection(bytes *[]byte, resourcePath string, collection *placeho
 }
 
 // addItemToCollection adds an item to the specified collection
-func addItemToCollection(bytes *[]byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
+func addItemToCollection(bytes []byte, resourcePath string, collection *placeholder.EntityCollection, errors []Error, warnings []Error) ([]Error, []Error) {
 	item := placeholder.Item{}
-	err := yaml.Unmarshal(*bytes, &item)
+	err := yaml.Unmarshal(bytes, &item)
 
 	if err != nil {
 		e := Error{

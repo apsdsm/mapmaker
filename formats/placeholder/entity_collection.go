@@ -37,7 +37,7 @@ func NewEntityCollection() EntityCollection {
 // Mob returns a mob if it exists in the collection. Otherwise nil
 func (collection *EntityCollection) Mob(link string) *Mob {
 	for _, m := range collection.Mobs {
-		if m.Link == link {
+		if m.Reference == link {
 			return &m
 		}
 	}

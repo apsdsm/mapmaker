@@ -10,9 +10,9 @@ func ValidateEntities(col *placeholder.EntityCollection, errors []Error, warning
 		mob := &col.Mobs[i]
 
 		// check for prototype
-		if mob.NeedsPrototype() && !col.HasMob(mob.Prot) {
+		if mob.NeedsPrototype() && !col.HasMob(mob.Prototype) {
 			e := Error{
-				Message:    "mob '" + mob.Link + "' requires prototype '" + mob.Prot + "', which is not defined by any entity.",
+				Message:    "mob '" + mob.Reference + "' requires prototype '" + mob.Prototype + "', which is not defined by any entity.",
 				LineNumber: -1,
 			}
 
@@ -22,7 +22,7 @@ func ValidateEntities(col *placeholder.EntityCollection, errors []Error, warning
 		for _, loot := range mob.ParsedLoot {
 			if !col.HasItem(loot.Link) {
 				e := Error{
-					Message:    "mob '" + mob.Link + "' requires item '" + loot.Link + "', which is not defined by any entity.",
+					Message:    "mob '" + mob.Reference + "' requires item '" + loot.Link + "', which is not defined by any entity.",
 					LineNumber: -1,
 				}
 

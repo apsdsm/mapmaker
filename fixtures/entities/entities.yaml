@@ -1,0 +1,14 @@
+mobs:
+  goblin:
+    prototype: goblin_prot
+    hp: 10
+    mp: 5
+    rune: g
+    loot:
+      - copper_coin[4]
+      - silver_coin[1..3]
+      - gold_coin[..2]
+      - axe
+    events:
+      on_die: mob_on_die
+      on_notice: mob_on_notice
