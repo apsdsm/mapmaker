@@ -53,60 +53,57 @@ func (e *EntityImporter) Read(in string) error {
 	err := yaml.Unmarshal(bytes, &e.Entities)
 
 	if err != nil {
+		// add an error here
 		return err
 	}
 
-	// parse mobs
+	// unmarshaling the mob gave us most of its data for free, but we still need to parse a few strings for each one.
 	for key, mob := range e.Entities.Mobs {
 
 		// copy reference into mob for easy access
 		mob.Reference = key
 
-		if err = e.parseLootStrings(mob); err != nil {
-			return err
-		}
-
+		// parse stuff that needs parsing
+		e.parseLoot(mob)
 	}
 
 	return nil
 
 }
 
-func (e *EntityImporter) parseLootStrings(m *placeholder.Mob) (err error) {
-
-	// copy the parse loot logic in here
+// parse a loot string. Loot strings contain an item id, and a numerical range that describes the min/max carry of that
+// item. There are a few was to write a loot string, so this method checks the string to discover the notation  before
+// it starts buliding a loot placeholder.
+func (e *EntityImporter) parseLoot(m *placeholder.Mob) {
 	var matches []string
 
 	for _, raw := range m.Loot {
+
+		// var (
+		// 	item string
+		// 	min  string
+		// 	max  string
+		// )
+
 		switch {
 
 		// `loot[x..y]`
 		case matchesRegExp(raw, e.matchLootItemMinMax, &matches):
-			if err = e.parseLootVars(m, matches[1], matches[2], matches[3], raw); err != nil {
-				return
-			}
+			e.parseLootVars(m, matches[1], matches[2], matches[3], raw)
 
 		// `loot[..x]`
 		case matchesRegExp(raw, e.matchLootItemZeroMax, &matches):
-			if err = e.parseLootVars(m, matches[1], "0", matches[2], raw); err != nil {
-				return
-			}
+			e.parseLootVars(m, matches[1], "0", matches[2], raw)
 
 		// `loot[x]`
 		case matchesRegExp(raw, e.matchLootItemAmount, &matches):
-			if err = e.parseLootVars(m, matches[1], matches[2], matches[2], raw); err != nil {
-				return
-			}
+			e.parseLootVars(m, matches[1], matches[2], matches[2], raw)
 
 		// `loot`
 		case matchesRegExp(raw, e.matchLootItemOne, &matches):
-			if err = e.parseLootVars(m, matches[1], "1", "1", raw); err != nil {
-				return
-			}
+			e.parseLootVars(m, matches[1], "1", "1", raw)
 		}
 	}
-
-	return nil
 }
 
 // matches a regular expression. If the match is true, copies the submatches into the provided result array.
@@ -120,7 +117,9 @@ func matchesRegExp(in string, match *regexp.Regexp, result *[]string) bool {
 	return false
 }
 
-func (e *EntityImporter) parseLootVars(m *placeholder.Mob, item, min, max, raw string) (err error) {
+// parses the vars found in a loot string into a loot placeholder. Adds any encountered errors to the error list.
+func (e *EntityImporter) parseLootVars(m *placeholder.Mob, item, min, max, raw string) {
+	var err error
 
 	// min cannot be greater than max
 	if min > max {
@@ -130,7 +129,7 @@ func (e *EntityImporter) parseLootVars(m *placeholder.Mob, item, min, max, raw s
 			LineNumber: 0,
 			IsWarning:  false,
 		})
-		return nil
+		return
 	}
 
 	loot := placeholder.Loot{}
@@ -158,6 +157,4 @@ func (e *EntityImporter) parseLootVars(m *placeholder.Mob, item, min, max, raw s
 	}
 
 	m.ParsedLoot = append(m.ParsedLoot, loot)
-
-	return nil
 }

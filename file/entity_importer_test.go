@@ -29,26 +29,26 @@ func TestEntityImporter_Read(t *testing.T) {
 		assert.Len(t, mob1.Loot, 4)
 		assert.Len(t, mob1.ParsedLoot, 4)
 		//
-		// assert.Equal(t, "copper_coin", mob1.ParsedLoot[0].Link)
-		// assert.Equal(t, 4, mob1.ParsedLoot[0].MinHeld)
-		// assert.Equal(t, 5, mob1.ParsedLoot[0].MaxHeld)
+		assert.Equal(t, "copper_coin", mob1.ParsedLoot[0].Link)
+		assert.Equal(t, 4, mob1.ParsedLoot[0].MinHeld)
+		assert.Equal(t, 4, mob1.ParsedLoot[0].MaxHeld)
 		//
-		// assert.Equal(t, "silver_coin", mob1.ParsedLoot[1].Link)
-		// assert.Equal(t, 1, mob1.ParsedLoot[1].MinHeld)
-		// assert.Equal(t, 3, mob1.ParsedLoot[1].MaxHeld)
+		assert.Equal(t, "silver_coin", mob1.ParsedLoot[1].Link)
+		assert.Equal(t, 1, mob1.ParsedLoot[1].MinHeld)
+		assert.Equal(t, 3, mob1.ParsedLoot[1].MaxHeld)
 		//
-		// assert.Equal(t, "gold_coin", mob1.ParsedLoot[2].Link)
-		// assert.Equal(t, 0, mob1.ParsedLoot[2].MinHeld)
-		// assert.Equal(t, 2, mob1.ParsedLoot[2].MaxHeld)
+		assert.Equal(t, "gold_coin", mob1.ParsedLoot[2].Link)
+		assert.Equal(t, 0, mob1.ParsedLoot[2].MinHeld)
+		assert.Equal(t, 2, mob1.ParsedLoot[2].MaxHeld)
 		//
-		// assert.Equal(t, "axe", mob1.ParsedLoot[3].Link)
-		// assert.Equal(t, 1, mob1.ParsedLoot[3].MinHeld)
-		// assert.Equal(t, 1, mob1.ParsedLoot[3].MaxHeld)
+		assert.Equal(t, "axe", mob1.ParsedLoot[3].Link)
+		assert.Equal(t, 1, mob1.ParsedLoot[3].MinHeld)
+		assert.Equal(t, 1, mob1.ParsedLoot[3].MaxHeld)
 		//
 		// // events
-		// assert.Len(t, mob1.Events, 2)
-		// assert.Equal(t, "mob_on_die", mob1.Events["on_die"])
-		// assert.Equal(t, "mob_on_notice", mob1.Events["on_notice"])
+		assert.Len(t, mob1.Events, 2)
+		assert.Equal(t, "mob_on_die", mob1.Events["on_die"])
+		assert.Equal(t, "mob_on_notice", mob1.Events["on_notice"])
 	})
 
 }

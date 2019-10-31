@@ -99,7 +99,7 @@ func addMobToCollection(bytes []byte, resourcePath string, collection *placehold
 	return errors, warnings
 }
 
-// parseLootString returns a loot object so long as the raw loot string is in a valid format
+// parseLootVars returns a loot object so long as the raw loot string is in a valid format
 func parseLootString(raw, resourcePath string) (placeholder.Loot, *Error) {
 
 	// the following regexps define a whitelist of valid item notations. Everything else is invalid.
