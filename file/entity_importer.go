@@ -9,6 +9,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+// EntityImporter is responsible for reading entities from an entity file and preparing them for import.
 type EntityImporter struct {
 	Entities *placeholder.EntityList
 	Errors   *ErrorList
@@ -20,6 +21,7 @@ type EntityImporter struct {
 	matchLootItemOne     *regexp.Regexp // match `item` notation
 }
 
+// NewEntityImporter initializes and returns a new EntityImporter.
 func NewEntityImporter() *EntityImporter {
 	i := EntityImporter{
 		Entities: placeholder.NewEntityList(),
@@ -46,7 +48,6 @@ func NewEntityImporter() *EntityImporter {
 }
 
 func (e *EntityImporter) Read(in string) error {
-
 	absPath := absPath(in)
 	bytes := readBytes(absPath)
 
@@ -76,33 +77,82 @@ func (e *EntityImporter) Read(in string) error {
 // it starts buliding a loot placeholder.
 func (e *EntityImporter) parseLoot(m *placeholder.Mob) {
 	var matches []string
+	var err error
 
 	for _, raw := range m.Loot {
 
-		// var (
-		// 	item string
-		// 	min  string
-		// 	max  string
-		// )
+		var (
+			item string
+			min  string
+			max  string
+		)
 
 		switch {
 
 		// `loot[x..y]`
 		case matchesRegExp(raw, e.matchLootItemMinMax, &matches):
-			e.parseLootVars(m, matches[1], matches[2], matches[3], raw)
+			item = matches[1]
+			min = matches[2]
+			max = matches[3]
 
 		// `loot[..x]`
 		case matchesRegExp(raw, e.matchLootItemZeroMax, &matches):
-			e.parseLootVars(m, matches[1], "0", matches[2], raw)
+			item = matches[1]
+			min = "0"
+			max = matches[2]
 
 		// `loot[x]`
 		case matchesRegExp(raw, e.matchLootItemAmount, &matches):
-			e.parseLootVars(m, matches[1], matches[2], matches[2], raw)
+			item = matches[1]
+			min = matches[2]
+			max = matches[2]
 
 		// `loot`
 		case matchesRegExp(raw, e.matchLootItemOne, &matches):
-			e.parseLootVars(m, matches[1], "1", "1", raw)
+			item = matches[1]
+			min = "1"
+			max = "1"
 		}
+
+		// min cannot be greater than max
+		if min > max {
+			e.Errors.Add(Error{
+				Message:    fmt.Sprintf("mob: %s, loot string: '%s' => min cannot be greater than max", m.Reference, raw),
+				FileName:   "",
+				LineNumber: 0,
+				IsWarning:  false,
+			})
+			return
+		}
+
+		loot := placeholder.Loot{}
+		loot.Link = item
+
+		// parse min value
+		loot.MinHeld, err = strconv.Atoi(min)
+
+		if err != nil {
+			e.Errors.Add(Error{
+				Message:    fmt.Sprintf("mob: %s : loot string: '%s' => min value could not be parsed as integer", m.Reference, raw),
+				FileName:   "",
+				LineNumber: 0,
+				IsWarning:  false,
+			})
+		}
+
+		// parse max value
+		loot.MaxHeld, err = strconv.Atoi(max)
+
+		if err != nil {
+			e.Errors.Add(Error{
+				Message:    fmt.Sprintf("mob: %s : loot string: '%s' => max value could not be parsed as integer", m.Reference, raw),
+				FileName:   "",
+				LineNumber: 0,
+				IsWarning:  false,
+			})
+		}
+
+		m.ParsedLoot = append(m.ParsedLoot, loot)
 	}
 }
 
@@ -115,46 +165,4 @@ func matchesRegExp(in string, match *regexp.Regexp, result *[]string) bool {
 	}
 
 	return false
-}
-
-// parses the vars found in a loot string into a loot placeholder. Adds any encountered errors to the error list.
-func (e *EntityImporter) parseLootVars(m *placeholder.Mob, item, min, max, raw string) {
-	var err error
-
-	// min cannot be greater than max
-	if min > max {
-		e.Errors.Add(Error{
-			Message:    fmt.Sprintf("mob: %s, loot string: '%s' => min cannot be greater than max", m.Reference, raw),
-			FileName:   "",
-			LineNumber: 0,
-			IsWarning:  false,
-		})
-		return
-	}
-
-	loot := placeholder.Loot{}
-	loot.Link = item
-	loot.MinHeld, err = strconv.Atoi(min)
-
-	if err != nil {
-		e.Errors.Add(Error{
-			Message:    fmt.Sprintf("mob: %s : loot string: '%s' => min value could not be parsed as integer", m.Reference, raw),
-			FileName:   "",
-			LineNumber: 0,
-			IsWarning:  false,
-		})
-	}
-
-	loot.MaxHeld, err = strconv.Atoi(max)
-
-	if err != nil {
-		e.Errors.Add(Error{
-			Message:    fmt.Sprintf("mob: %s : loot string: '%s' => max value could not be parsed as integer", m.Reference, raw),
-			FileName:   "",
-			LineNumber: 0,
-			IsWarning:  false,
-		})
-	}
-
-	m.ParsedLoot = append(m.ParsedLoot, loot)
 }
