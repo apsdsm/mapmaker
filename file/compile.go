@@ -68,10 +68,10 @@ func doorsToJson(doors []placeholder.Door) []output.Door {
 
 	for i := range doors {
 		d[i] = output.Door{
-			Link:   doors[i].Link,
+			// Link:   doors[i].Link,
 			Locked: doors[i].Locked,
 			Key:    doors[i].Key,
-			OnTry:  doors[i].OnTry,
+			// OnTry:  doors[i].OnTry,
 		}
 	}
 

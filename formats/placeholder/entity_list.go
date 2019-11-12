@@ -1,18 +1,31 @@
 package placeholder
 
+// EntityList is a representation of a list of importable entities. It should be imported
+// using the EntityImporter.
 type EntityList struct {
-	Mobs map[string]*Mob `yaml:"mobs"`
+	Mobs  map[string]*Mob  `yaml:"mobs"`
+	Doors map[string]*Door `yaml:"doors"`
 }
 
+// NewEntityList initializes and returns a new EntityList.
 func NewEntityList() *EntityList {
 	return &EntityList{
 		Mobs: make(map[string]*Mob, 0),
 	}
 }
 
+// Mob returns a mob of the same name
 func (e *EntityList) Mob(name string) *Mob {
 	if mob, exists := e.Mobs[name]; exists {
 		return mob
+	}
+	return nil
+}
+
+// Door returns a door of the same name
+func (e *EntityList) Door(name string) *Door {
+	if door, exists := e.Doors[name]; exists {
+		return door
 	}
 	return nil
 }

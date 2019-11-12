@@ -36,7 +36,7 @@ func ValidateEntities(col *placeholder.EntityCollection, errors []Error, warning
 
 		if door.NeedsKey() && !col.HasKey(door.Key) {
 			e := Error{
-				Message:    "door '" + door.Link + "' requires key '" + door.Key + "', which is not defined by any entity.",
+				// Message:    "door '" + door.Link + "' requires key '" + door.Key + "', which is not defined by any entity.",
 				LineNumber: -1,
 			}
 

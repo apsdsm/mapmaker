@@ -12,3 +12,10 @@ mobs:
     events:
       on_die: mob_on_die
       on_notice: mob_on_notice
+
+doors:
+  locked_door:
+    locked: true
+    key: door_key
+    events:
+      on_try: door_on_try

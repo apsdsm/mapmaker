@@ -57,11 +57,11 @@ func (collection *EntityCollection) AddMobs(mob ...Mob) {
 
 // GetDoor returns a link to a door if it exists, otherwise nil
 func (collection *EntityCollection) GetDoor(link string) *Door {
-	for _, d := range collection.Doors {
-		if d.Link == link {
-			return &d
-		}
-	}
+	// for _, d := range collection.Doors {
+	// 	if d.Link == link {
+	// 		return &d
+	// 	}
+	// }
 
 	return nil
 }

@@ -58,14 +58,15 @@ func (e *EntityImporter) Read(in string) error {
 		return err
 	}
 
-	// unmarshaling the mob gave us most of its data for free, but we still need to parse a few strings for each one.
+	// fill in blanks for imported mobs
 	for key, mob := range e.Entities.Mobs {
-
-		// copy reference into mob for easy access
 		mob.Reference = key
-
-		// parse stuff that needs parsing
 		e.parseLoot(mob)
+	}
+
+	// fill in blanks for imported doors
+	for key, door := range e.Entities.Doors {
+		door.Reference = key
 	}
 
 	return nil
