@@ -124,7 +124,7 @@ func itemsToJSON(items []placeholder.Item) []output.Item {
 
 	for i := range items {
 		r[i] = output.Item{
-			Link: items[i].Link,
+			// Link: items[i].Link,
 			Type: items[i].Type,
 			Name: items[i].Name,
 			Desc: items[i].Desc,

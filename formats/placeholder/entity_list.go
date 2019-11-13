@@ -5,6 +5,7 @@ package placeholder
 type EntityList struct {
 	Mobs  map[string]*Mob  `yaml:"mobs"`
 	Doors map[string]*Door `yaml:"doors"`
+	Items map[string]*Item `yaml:"items"`
 }
 
 // NewEntityList initializes and returns a new EntityList.
@@ -26,6 +27,14 @@ func (e *EntityList) Mob(name string) *Mob {
 func (e *EntityList) Door(name string) *Door {
 	if door, exists := e.Doors[name]; exists {
 		return door
+	}
+	return nil
+}
+
+// Item returns an item of the same name
+func (e *EntityList) Item(name string) *Item {
+	if item, exists := e.Items[name]; exists {
+		return item
 	}
 	return nil
 }

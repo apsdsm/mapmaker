@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/apsdsm/mapmaker/file"
-	"github.com/apsdsm/mapmaker/formats/placeholder"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -61,13 +60,6 @@ func TestEntityImporter_ReadDoors(t *testing.T) {
 	assert.Nil(t, err)
 
 	t.Run("adds door data", func(t *testing.T) {
-		source := "../fixtures/entities/door.door.yaml"
-
-		entities := placeholder.NewEntityCollection()
-		errors := make([]file.Error, 0, 0)
-		warnings := make([]file.Error, 0, 0)
-		errors, warnings = file.AddEntityToCollection(source, &entities, errors, warnings)
-
 		door1 := importer.Entities.Door("locked_door")
 
 		// general settings
@@ -80,4 +72,27 @@ func TestEntityImporter_ReadDoors(t *testing.T) {
 		assert.Equal(t, "door_on_try", door1.Events["on_try"])
 	})
 
+}
+
+func TestEntityImporter_ReadItems(t *testing.T) {
+
+	importer := file.NewEntityImporter()
+
+	err := importer.Read("../fixtures/entities/entities.yaml")
+	assert.Nil(t, err)
+
+	t.Run("loads item data", func(t *testing.T) {
+		item1 := importer.Entities.Item("goboskull")
+
+		assert.Len(t, importer.Entities.Items, 1)
+
+		// data
+		assert.Equal(t, "goboskull", item1.Reference)
+		assert.Equal(t, "Gobo's Skull", item1.Name)
+		assert.Equal(t, "It's Gobo's Skull.", item1.Desc)
+		assert.Equal(t, "skull", item1.Type)
+		assert.Equal(t, "1", item1.Size)
+		assert.Equal(t, "true", item1.Uniq)
+
+	})
 }

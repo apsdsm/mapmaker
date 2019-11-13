@@ -19,3 +19,11 @@ doors:
     key: door_key
     events:
       on_try: door_on_try
+
+items:
+  goboskull:
+    type: skull
+    name: Gobo's Skull
+    desc: It's Gobo's Skull.
+    size: 1
+    uniq: true

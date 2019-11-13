@@ -69,6 +69,11 @@ func (e *EntityImporter) Read(in string) error {
 		door.Reference = key
 	}
 
+	// fill in blanks for imported items
+	for key, item := range e.Entities.Items {
+		item.Reference = key
+	}
+
 	return nil
 
 }

@@ -90,7 +90,7 @@ var _ = Describe("Compiler", func() {
 		}
 
 		loot := placeholder.Item{
-			Link: "loot",
+			//Link: "loot",
 		}
 
 		entities := placeholder.NewEntityCollection()

@@ -1,6 +1,7 @@
 package placeholder
 
-// Door is a placeholder for door entities in a level
+// A Door is a baricade that can be either open or closed. When closed it is not walkable.
+// Opening the baricade requires using a Key.
 type Door struct {
 	Reference string            `yaml:"-"`
 	Locked    bool              `yaml:"locked"`

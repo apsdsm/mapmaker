@@ -104,10 +104,10 @@ func (collection *EntityCollection) HasItem(link string) bool {
 
 // Item returns the address of an item with matching link, or nil if no item exists
 func (c *EntityCollection) Item(link string) *Item {
-	for i := range c.Items {
-		if c.Items[i].Link == link {
-			return &c.Items[i]
-		}
-	}
+	// for i := range c.Items {
+	// 	// if c.Items[i].Link == link {
+	// 	// 	return &c.Items[i]
+	// 	// }
+	// }
 	return nil
 }
