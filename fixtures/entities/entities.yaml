@@ -27,3 +27,5 @@ items:
     desc: It's Gobo's Skull.
     size: 1
     uniq: true
+    events:
+      on_use: goboskull_on_use

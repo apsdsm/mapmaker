@@ -21,11 +21,16 @@ type EntityImporter struct {
 	matchLootItemOne     *regexp.Regexp // match `item` notation
 }
 
+// EntityImporterConfig contains settings for EntityImporter
+type EntityImporterConfig struct {
+	Errors *ErrorList
+}
+
 // NewEntityImporter initializes and returns a new EntityImporter.
-func NewEntityImporter() *EntityImporter {
+func NewEntityImporter(c EntityImporterConfig) *EntityImporter {
 	i := EntityImporter{
 		Entities: placeholder.NewEntityList(),
-		Errors:   NewErrorList(),
+		Errors:   c.Errors,
 
 		// e.g., copper_coin[2..10] <- give somewhere from 2 to 10 copper coins
 		// matches: item_name, min, max

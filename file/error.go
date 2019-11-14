@@ -7,7 +7,6 @@ type Error struct {
 	LineNumber int
 	IsWarning  bool
 }
-
 type ErrorList struct {
 	errors []Error
 }
@@ -18,4 +17,8 @@ func NewErrorList() *ErrorList {
 
 func (e *ErrorList) Add(error Error) {
 	e.errors = append(e.errors, error)
+}
+
+func (e *ErrorList) All() []Error {
+	return e.errors
 }

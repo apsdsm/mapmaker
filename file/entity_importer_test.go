@@ -8,7 +8,9 @@ import (
 )
 
 func TestEntityImporter_ReadMobs(t *testing.T) {
-	importer := file.NewEntityImporter()
+	importer := file.NewEntityImporter(file.EntityImporterConfig{
+		Errors: file.NewErrorList(),
+	})
 
 	err := importer.Read("../fixtures/entities/entities.yaml")
 	assert.Nil(t, err)
@@ -54,7 +56,9 @@ func TestEntityImporter_ReadMobs(t *testing.T) {
 
 func TestEntityImporter_ReadDoors(t *testing.T) {
 
-	importer := file.NewEntityImporter()
+	importer := file.NewEntityImporter(file.EntityImporterConfig{
+		Errors: file.NewErrorList(),
+	})
 
 	err := importer.Read("../fixtures/entities/entities.yaml")
 	assert.Nil(t, err)
@@ -76,7 +80,9 @@ func TestEntityImporter_ReadDoors(t *testing.T) {
 
 func TestEntityImporter_ReadItems(t *testing.T) {
 
-	importer := file.NewEntityImporter()
+	importer := file.NewEntityImporter(file.EntityImporterConfig{
+		Errors: file.NewErrorList(),
+	})
 
 	err := importer.Read("../fixtures/entities/entities.yaml")
 	assert.Nil(t, err)
@@ -93,6 +99,8 @@ func TestEntityImporter_ReadItems(t *testing.T) {
 		assert.Equal(t, "skull", item1.Type)
 		assert.Equal(t, "1", item1.Size)
 		assert.Equal(t, "true", item1.Uniq)
-
+		// events
+		assert.Len(t, item1.Events, 1)
+		assert.Equal(t, "goboskull_on_use", item1.Events["on_use"])
 	})
 }
