@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidator_PrototypeChecking(t *testing.T) {
+func TestValidator_MobPrototypeChecking(t *testing.T) {
 	validator := file.NewEntityValidator(file.EntityValidatorConfig{
 		Errors: file.NewErrorList(),
 	})
@@ -26,7 +26,53 @@ func TestValidator_PrototypeChecking(t *testing.T) {
 	err := validator.Validate(entities)
 	assert.NoError(t, err)
 
-	assertErrorExists(t, validator.Errors, "prototype not found: does-not-exist ==> mob1", false)
+	assertErrorExists(t, validator.Errors, "prototype not found: mobs.mob1.prototype.does-not-exist", false)
+}
+
+func TestValidator_MobItemChecking(t *testing.T) {
+	validator := file.NewEntityValidator(file.EntityValidatorConfig{
+		Errors: file.NewErrorList(),
+	})
+
+	entities := placeholder.NewEntityList()
+
+	// mob with missing loot
+	entities.Mobs["mob1"] = &placeholder.Mob{
+		Name:      "Mising Items",
+		Reference: "mob1",
+		Rune:      "g",
+		ParsedLoot: []placeholder.Loot{
+			{
+				Link: "does-not-exist",
+			},
+		},
+	}
+
+	err := validator.Validate(entities)
+	assert.NoError(t, err)
+
+	assertErrorExists(t, validator.Errors, "item not found: mobs.mob1.loot.does-not-exist", false)
+	assertErrorExists(t, validator.Errors, "loot will never be carried: mobs.mob1.loot.does-not-exist", true)
+}
+
+func TestValidator_DoorChecking(t *testing.T) {
+	validator := file.NewEntityValidator(file.EntityValidatorConfig{
+		Errors: file.NewErrorList(),
+	})
+
+	entities := placeholder.NewEntityList()
+
+	// mob with missing loot
+	entities.Doors["door1"] = &placeholder.Door{
+		Reference: "door1",
+		Locked:    false,
+		Key:       "does-not-exist",
+	}
+
+	err := validator.Validate(entities)
+	assert.NoError(t, err)
+
+	assertErrorExists(t, validator.Errors, "item not found: doors.door1.key.does-not-exist", false)
 }
 
 func assertErrorExists(t *testing.T, errors *file.ErrorList, message string, warning bool) {

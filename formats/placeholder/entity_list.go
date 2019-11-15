@@ -11,7 +11,9 @@ type EntityList struct {
 // NewEntityList initializes and returns a new EntityList.
 func NewEntityList() *EntityList {
 	return &EntityList{
-		Mobs: make(map[string]*Mob, 0),
+		Mobs:  make(map[string]*Mob),
+		Doors: make(map[string]*Door),
+		Items: make(map[string]*Item),
 	}
 }
 
