@@ -1,13 +1,13 @@
 package placeholder
 
 type Dungeon struct {
-	Link          string
-	Name          string
-	Description   string
-	Height        int
-	Width         int
-	Grid          [][]*Cell
-	StartPosition *Position
+	Link          string    `yaml:"link"`
+	Name          string    `yaml:"name"`
+	Description   string    `yaml:"desc"`
+	Height        int       `yaml:"-"`
+	Width         int       `yaml:"-"`
+	Grid          [][]*Cell `yaml:"-"`
+	StartPosition *Position `yaml:"-"`
 }
 
 // AllocateTiles will generate enough space for the tiles requires by width and height

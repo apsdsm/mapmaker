@@ -21,9 +21,14 @@ type Line struct {
 }
 
 // NewLine makes and returns a new line
-func NewLine(length int) Line {
+func NewLine(len int) Line {
 	line := Line{
-		Cells: make([]*Cell, length),
+		Cells: make([]*Cell, len),
 	}
 	return line
+}
+
+// Len returns the length of the map line
+func (l *Line) Len() int {
+	return len(l.Cells)
 }

@@ -196,7 +196,12 @@ func parseDungeonBuffer(dungeonBuffer bytes.Buffer) *placeholder.Map {
 	return dungeon
 }
 
-// getPartsFromMapText will return the parts in a line from the map
+// Each line of the dungeon is split into map data, and an optional array of annotation for that line (split
+// at a `//`). This function will return the
+// ```
+// #   m   # // m:goblin
+// ```
+//
 func getPartsFromRawLine(text string) (mapData string, annotations []placeholder.Annotation) {
 	parts := strings.Split(text, "//")
 

@@ -16,6 +16,7 @@ package placeholder
 
 // Annotation is a placeholder for a cell annotation in a map
 type Annotation struct {
-	Target string
-	Link   string
+	Target   string
+	Link     string
+	Assigned bool
 }

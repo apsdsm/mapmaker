@@ -84,7 +84,7 @@ func (e *EntityImporter) Read(in string) error {
 }
 
 // parse a loot string. Loot strings contain an item id, and a numerical range that describes the min/max carry of that
-// item. There are a few was to write a loot string, so this method checks the string to discover the notation  before
+// item. There are a few ways to write a loot string, so this method checks the string to discover the notation  before
 // it starts buliding a loot placeholder.
 func (e *EntityImporter) parseLoot(m *placeholder.Mob) {
 	var matches []string
