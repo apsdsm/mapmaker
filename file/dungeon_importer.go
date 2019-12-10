@@ -191,9 +191,9 @@ func (i *DungeonImporter) parseDungeonBuffer(dungeonBuffer bytes.Buffer) error {
 	// - sets a ' ' as the rune value for start cell and entity cells
 	for r := 0; r < rows; r++ {
 		for c := 0; c < cols; c++ {
-
+			
 			// pad with empty space if this line is shorter than longest line
-			if c > len(lines[r].Cells) {
+			if c >= len(lines[r].Cells) {
 				i.Dungeon.Grid[c][r] = placeholder.EmptyCell()
 				continue
 			}
@@ -224,14 +224,16 @@ func (i *DungeonImporter) parseDungeonBuffer(dungeonBuffer bytes.Buffer) error {
 // ```
 // #   m m   # // m:goblin m:orc
 // ```
-func (i *DungeonImporter) getPartsFromRawLine(text string) (mapLine placeholder.Line, mapAnnotations []placeholder.Annotation) {
+func (i *DungeonImporter) getPartsFromRawLine(text string) (placeholder.Line, []placeholder.Annotation) {
+	var mapAnnotations []placeholder.Annotation
+	var mapLine placeholder.Line
 
 	parts := strings.Split(text, "//")
 
 	// if map data present
 	if len(parts) > 0 {
 		rawMapLine := strings.TrimRight(parts[0], " ")
-		mapLine := placeholder.NewLine(len(rawMapLine))
+		mapLine = placeholder.NewLine(len(rawMapLine))
 
 		// convert the runes in the line into cells
 		for i, r := range rawMapLine {

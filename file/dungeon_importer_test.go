@@ -8,7 +8,6 @@ import (
 )
 
 func TestDungeonImporter(t *testing.T) {
-
 	importer := file.NewDungeonImporter(file.DungeonImporterConfig{})
 
 	err := importer.Read("../fixtures/maps/meta_and_map.map")
