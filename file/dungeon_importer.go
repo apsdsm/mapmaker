@@ -12,6 +12,15 @@ import (
 	"github.com/apsdsm/mapmaker/formats/placeholder"
 )
 
+const (
+	beforeMeta = iota
+	insideMeta
+	mapContent
+)
+
+// lineParts are the two parts of a line of the dungeon after it is split into map data and annotation data
+type lineParts []string
+
 type DungeonImporter struct {
 	Dungeon         *placeholder.Dungeon
 	Errors          *ErrorList
@@ -42,7 +51,7 @@ func (i *DungeonImporter) Read(in string) error {
 	var err error
 
 	// get the meta and dungeon for this file as buffers
-	metaBuffer, dungeonBuffer := getMetaAndDungeonBuffers(in)
+	metaBuffer, dungeonBuffer := i.getMetaAndDungeonBuffers(in)
 
 	// parse meta
 	if err := i.parseMetaBuffer(metaBuffer); err != nil {
@@ -191,7 +200,7 @@ func (i *DungeonImporter) parseDungeonBuffer(dungeonBuffer bytes.Buffer) error {
 	// - sets a ' ' as the rune value for start cell and entity cells
 	for r := 0; r < rows; r++ {
 		for c := 0; c < cols; c++ {
-			
+
 			// pad with empty space if this line is shorter than longest line
 			if c >= len(lines[r].Cells) {
 				i.Dungeon.Grid[c][r] = placeholder.EmptyCell()
