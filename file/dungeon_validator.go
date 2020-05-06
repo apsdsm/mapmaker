@@ -27,21 +27,20 @@ func (v *DungeonValidator) Validate(dungeon *placeholder.Dungeon, entities *plac
 	// check for name
 	if dungeon.Name == "" {
 		v.Errors.Add(Error{
-			Message:    "map has no name.",
+			Message:    "map has no name",
 			LineNumber: -1,
 			IsWarning:  true,
 		})
 	}
 
-	//// check for start point
-	//if levelData.StartPosition == nil {
-	//	err := Error{
-	//		Message:    "map has no start position.",
-	//		LineNumber: -1,
-	//	}
-	//	errors = append(errors, err)
-	//}
-	//
+	// check for start position
+	if dungeon.StartPosition == nil {
+		v.Errors.Add(Error{
+			Message:    "map has no start position",
+			LineNumber: -1,
+			IsWarning:  false,
+		})
+	}
 
 	// validate each cell
 	for x := 0; x < dungeon.Width; x++ {
@@ -65,7 +64,7 @@ func (v *DungeonValidator) validateCell(cell *placeholder.Cell, line int, entiti
 	if cell.Type == "mob" {
 		if !entities.HasMob(cell.Link) {
 			v.Errors.Add(Error{
-				Message:    fmt.Sprintf("mob %s is not defined by any entity.", cell.Link),
+				Message:    fmt.Sprintf("mob %s is not defined by any entity", cell.Link),
 				LineNumber: line,
 			})
 		}
@@ -74,7 +73,7 @@ func (v *DungeonValidator) validateCell(cell *placeholder.Cell, line int, entiti
 	if cell.Type == "door" {
 		if !entities.HasDoor(cell.Link) {
 			v.Errors.Add(Error{
-				Message:    fmt.Sprintf("door %s is not defined by any entity.", cell.Link),
+				Message:    fmt.Sprintf("door %s is not defined by any entity", cell.Link),
 				LineNumber: line,
 			})
 		}
