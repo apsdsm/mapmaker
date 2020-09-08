@@ -14,6 +14,7 @@ type DungeonValidatorConfig struct {
 	Errors *ErrorList
 }
 
+// NewDungeonValidator will create and initialize a new DungeonValidator object.
 func NewDungeonValidator(c DungeonValidatorConfig) *DungeonValidator {
 	v := DungeonValidator{
 		Errors: c.Errors,
@@ -22,6 +23,7 @@ func NewDungeonValidator(c DungeonValidatorConfig) *DungeonValidator {
 	return &v
 }
 
+// Validate will validate a placeholder dungeon and entity list, reporting errors in the Error list.
 func (v *DungeonValidator) Validate(dungeon *placeholder.Dungeon, entities *placeholder.EntityList) error {
 
 	// check for name
@@ -56,6 +58,7 @@ func (v *DungeonValidator) Validate(dungeon *placeholder.Dungeon, entities *plac
 	return nil
 }
 
+// validate a single cell of the dungeon
 func (v *DungeonValidator) validateCell(cell *placeholder.Cell, line int, entities *placeholder.EntityList) error {
 	if !cell.Annotated {
 		return nil

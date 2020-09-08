@@ -15,22 +15,25 @@ import (
 const (
 	beforeMeta = iota
 	insideMeta
-	mapContent
+	insideDungeon
 )
 
 // lineParts are the two parts of a line of the dungeon after it is split into map data and annotation data
 type lineParts []string
 
+// A DungeonImporter creates a placeholder.Dungeon from a .map file.
 type DungeonImporter struct {
 	Dungeon         *placeholder.Dungeon
 	Errors          *ErrorList
 	annotationTypes map[string]string
 }
 
+// A DungeonImporterConfig contains the config data for a DungeonImporter.
 type DungeonImporterConfig struct {
 	Errors *ErrorList
 }
 
+// NewDungeonImporter will create and initialize a new DungeonImporter.
 func NewDungeonImporter(c DungeonImporterConfig) *DungeonImporter {
 	i := DungeonImporter{
 		Dungeon: &placeholder.Dungeon{},
@@ -47,6 +50,8 @@ func NewDungeonImporter(c DungeonImporterConfig) *DungeonImporter {
 	return &i
 }
 
+// Read will load a raw dungeon file, and convert it into a placeholder.Dungeon object. It will record any errors
+// in the DungeonImporter's Error list.
 func (i *DungeonImporter) Read(in string) error {
 	var err error
 
@@ -65,45 +70,44 @@ func (i *DungeonImporter) Read(in string) error {
 	return nil
 }
 
-// getMtaAndMapBuffers takes the path to a .map file and returns two buffers: one for the meta and one for the dungeon
+// takes the location of a .map file, and splits it into two buffers - one for th meta data and one for the dungeon.
 func (i *DungeonImporter) getMetaAndDungeonBuffers(path string) (metaBuffer bytes.Buffer, dungeonBuffer bytes.Buffer) {
-
-	// load map file
+	// open file and load into scanner
 	path, err := filepath.Abs(path)
 	data, err := os.Open(path)
-	defer data.Close()
 
 	if err != nil {
 		panic("error wile opening file")
 	}
 
-	// load map file into scanner
+	defer data.Close()
+
 	scanner := bufio.NewScanner(data)
 	scanner.Split(bufio.ScanLines)
 
-	// loop variables
-	section := beforeMeta
-	seperator := "---"
-	newline := "\n"
-
-	// .map files have the following layout
-	//     ---                    <- beforeMeta
-	//     yaml structure meta    <- insideMeta
-	//     ---
-	//     map structure          <- mapContent
+	// scan through the text file, writing lines to the appropriate buffer:
 	//
-	// this loop will write lines to the correct buffer based on where the cursor is in the file.
+	// .map files have the following layout
+	//                            <- `beforeMeta`
+	//     ---                    <- separator indicates change of section
+	//     yaml structure meta    <- `insideMeta` (this content is written to the metaBuffer)
+	//     ---                    <- separator indicates change of section
+	//     map structure          <- `insideDungeon` (this content is written to the dungeonBuffer)
+	//     ...                    <- continues to end of document
+
+	section := beforeMeta
+
 	for scanner.Scan() {
 		text := scanner.Text()
 
-		if text == seperator && section == beforeMeta {
+		if text == "---" && section == beforeMeta {
 			section = insideMeta
-		} else if text == seperator && section == insideMeta {
-			section = mapContent
+		} else if text == "---" && section == insideMeta {
+			section = insideDungeon
 		} else if section == insideMeta {
-			metaBuffer.WriteString(text + newline)
-		} else if section == mapContent {
-			dungeonBuffer.WriteString(text + newline)
+			metaBuffer.WriteString(text + "\n")
+		} else if section == insideDungeon {
+			dungeonBuffer.WriteString(text + "\n")
 		}
 	}
 
@@ -179,25 +183,24 @@ func (i *DungeonImporter) parseDungeonBuffer(dungeonBuffer bytes.Buffer) error {
 	// allocate enough space for dungeon
 	i.Dungeon.AllocateTiles(cols, rows)
 
-	// copy cells from lines to grid
-	// - converts the alignment of rows and cols (lines are ROWxCOL, but a grid is COLxROW)
+	// copy cells from lines to grid:
+	// - convert the alignment of rows and cols (lines are ROWxCOL, but a grid is COLxROW)
+	//
 	//   ```
-	//   〈 a, b, c 〉
-	//   〈 d, e, f 〉
-	//   〈 g, h, r 〉
-	//   ```
-	//   will be transformed to:
-	//   ```
+	//   〈 a  b  c 〉  <- from this
+	//   〈 d  e  f 〉
+	//   〈 g  h  r 〉
+	//
 	//     ︿  ︿  ︿
-	//     a   b   c
+	//     a   b   c   <- to this
 	//     d   e   f
 	//     g   h   r
 	//     ﹀  ﹀  ﹀
 	//   ```
 	//
-	// - pads empty cells to the right if line is shorter than map width
-	// - checks for start cell and sets dungeon data appropriately
-	// - sets a ' ' as the rune value for start cell and entity cells
+	// - pad empty cells to the right if line is shorter than map width
+	// - check for start cell and sets dungeon data appropriately
+	// - set ' ' as the rune value for start cell and entity cells
 	for r := 0; r < rows; r++ {
 		for c := 0; c < cols; c++ {
 
@@ -227,11 +230,17 @@ func (i *DungeonImporter) parseDungeonBuffer(dungeonBuffer bytes.Buffer) error {
 	return nil
 }
 
-// Each line of the dungeon can have an optional annotation (denoted by //) which contains information about
-// the entities on that line. Annotations are attached left to right.
+// split a line of a dungeon into its layout and annotation parts. Each line of the dungeon can have an optional
+// annotation (denoted by //) which contains information about the entities on that line. Annotations are attached
+// left to right.
 //
 // ```
-// #   m m   # // m:goblin m:orc
+//     +- this is the monkey
+//     | +-- this is the lion
+//     | |
+// #   m m  # // m:monkey m:lion
+// ^^^^^^^^^^    ^^^^^^^^^^^^^^^
+//   layout        annotations
 // ```
 func (i *DungeonImporter) getPartsFromRawLine(text string) (placeholder.Line, []placeholder.Annotation) {
 	var mapAnnotations []placeholder.Annotation
@@ -239,18 +248,17 @@ func (i *DungeonImporter) getPartsFromRawLine(text string) (placeholder.Line, []
 
 	parts := strings.Split(text, "//")
 
-	// if map data present
+	// if map data present, convert the runes on the line to cells
 	if len(parts) > 0 {
 		rawMapLine := strings.TrimRight(parts[0], " ")
 		mapLine = placeholder.NewLine(len(rawMapLine))
 
-		// convert the runes in the line into cells
 		for i, r := range rawMapLine {
 			mapLine.Cells[i] = placeholder.NewCellFromRune(r)
 		}
 	}
 
-	// if annotations present
+	// if annotations present, assign them to to the cells from the previous step
 	if len(parts) > 1 {
 		rawAnnotations := strings.Split(parts[1], " ")
 
