@@ -7,9 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"gopkg.in/yaml.v2"
-
 	"github.com/apsdsm/mapmaker/formats/placeholder"
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -183,7 +182,7 @@ func (i *DungeonImporter) parseDungeonBuffer(dungeonBuffer bytes.Buffer) error {
 	// allocate enough space for dungeon
 	i.Dungeon.AllocateTiles(cols, rows)
 
-	// copy cells from lines to grid:
+	// invert rows/cols:
 	// - convert the alignment of rows and cols (lines are ROWxCOL, but a grid is COLxROW)
 	//
 	//   ```

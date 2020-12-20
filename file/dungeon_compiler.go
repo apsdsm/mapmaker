@@ -5,35 +5,56 @@ import (
 	"github.com/apsdsm/mapmaker/formats/placeholder"
 )
 
-// Compile converts placeholder information to a map file that can be saved as json
-func Compile(metaData *placeholder.Meta, mapData *placeholder.Map, entities *placeholder.EntityCollection) *output.Dungeon {
-	m := output.NewDungeon(mapData.Width, mapData.Height)
+// A Compiler takes a validated placeholder.Dungeon and placeholder.EntityList and compiles them into a single .dng file.
+type Compiler struct {
+}
+
+// CompilerConfig contains the config data for a Compiler
+type CompilerConfig struct {
+}
+
+// NewCompiler will create and initialize a new Compiler
+func NewCompiler(config CompilerConfig) *Compiler {
+	c := Compiler{}
+	return &c
+}
+
+// Compile will compile the raw map data into a compiled map, but what it should do is compile an array of dungeons together,
+// with the entities, as separate files!
+func (c *Compiler) Compile(dungeon *placeholder.Dungeon, entities *placeholder.EntityCollection) (*output.Dungeon, error) {
+
+	// todo - make this compile into different files, and compile a single file that links them together
+
+	m := output.NewDungeon(dungeon.Width, dungeon.Height)
 
 	// copy tile data
 	// - set floor tiles as walkable
 	// - set spawn data for tiles
-	for x := 0; x < mapData.Width; x++ {
-		for y := 0; y < mapData.Height; y++ {
-			m.Tiles[x][y].Rune = mapData.Grid[x][y].Rune
+	for x := 0; x < dungeon.Width; x++ {
+		for y := 0; y < dungeon.Height; y++ {
+			m.Tiles[x][y].Rune = dungeon.Grid[x][y].Rune
 
-			if mapData.Grid[x][y].Rune == ' ' {
+			if dungeon.Grid[x][y].Rune == ' ' {
 				m.Tiles[x][y].Walkable = true
 			}
-			if mapData.Grid[x][y].Type == "mob" {
-				m.Tiles[x][y].Spawn = mapData.Grid[x][y].Link
+
+			switch dungeon.Grid[x][y].Type {
+			case "mob", "door", "item":
+				m.Tiles[x][y].Spawn = dungeon.Grid[x][y].Link
+				m.Tiles[x][y].Walkable = true
 			}
 		}
 	}
 
 	// start position
-	if mapData.StartPosition != nil {
-		m.StartPosition = positionToJson(*mapData.StartPosition)
+	if dungeon.StartPosition != nil {
+		m.StartPosition = positionToJson(*dungeon.StartPosition)
 	}
 
 	// copy meta
-	m.Link = metaData.Link
-	m.Name = metaData.Name
-	m.Desc = metaData.Desc
+	m.Link = dungeon.Link
+	m.Name = dungeon.Name
+	m.Desc = dungeon.Description
 
 	// copy entities
 	m.Doors = doorsToJson(entities.Doors)
@@ -41,7 +62,7 @@ func Compile(metaData *placeholder.Meta, mapData *placeholder.Map, entities *pla
 	m.Keys = keysToJSON(entities.Keys)
 	m.Items = itemsToJSON(entities.Items)
 
-	return m
+	return m, nil
 }
 
 func positionToJson(position placeholder.Position) output.Position {

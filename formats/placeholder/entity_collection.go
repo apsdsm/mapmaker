@@ -23,6 +23,7 @@ type EntityCollection struct {
 }
 
 // NewEntityCollection initializes and returns an EntityCollection object
+// todo - make this return a pointer
 func NewEntityCollection() EntityCollection {
 	e := EntityCollection{
 		Mobs:  make([]Mob, 0, 10),
