@@ -22,9 +22,6 @@ func NewCompiler(config CompilerConfig) *Compiler {
 // Compile will compile the raw map data into a compiled map, but what it should do is compile an array of dungeons together,
 // with the entities, as separate files!
 func (c *Compiler) Compile(dungeon *placeholder.Dungeon, entities *placeholder.EntityCollection) (*output.Dungeon, error) {
-
-	// todo - make this compile into different files, and compile a single file that links them together
-
 	m := output.NewDungeon(dungeon.Width, dungeon.Height)
 
 	// copy tile data
@@ -57,10 +54,10 @@ func (c *Compiler) Compile(dungeon *placeholder.Dungeon, entities *placeholder.E
 	m.Desc = dungeon.Description
 
 	// copy entities
-	m.Doors = doorsToJson(entities.Doors)
-	m.Mobs = mobsToJSON(entities.Mobs)
-	m.Keys = keysToJSON(entities.Keys)
-	m.Items = itemsToJSON(entities.Items)
+	m.Doors = compileDoors(entities.Doors)
+	m.Mobs = compilesMobs(entities.Mobs)
+	m.Keys = compileKeys(entities.Keys)
+	m.Items = compileItems(entities.Items)
 
 	return m, nil
 }
@@ -72,7 +69,7 @@ func positionToJson(position placeholder.Position) output.Position {
 	}
 }
 
-func doorsToJson(doors []placeholder.Door) []output.Door {
+func compileDoors(doors []placeholder.Door) []output.Door {
 	d := make([]output.Door, len(doors))
 
 	for i := range doors {
@@ -87,7 +84,7 @@ func doorsToJson(doors []placeholder.Door) []output.Door {
 	return d
 }
 
-func mobsToJSON(mobs []placeholder.Mob) []output.Mob {
+func compilesMobs(mobs []placeholder.Mob) []output.Mob {
 	m := make([]output.Mob, len(mobs))
 
 	for i := range mobs {
@@ -114,7 +111,7 @@ func mobsToJSON(mobs []placeholder.Mob) []output.Mob {
 	return m
 }
 
-func keysToJSON(keys []placeholder.Key) []output.Key {
+func compileKeys(keys []placeholder.Key) []output.Key {
 	k := make([]output.Key, len(keys))
 
 	for i := range keys {
@@ -128,7 +125,7 @@ func keysToJSON(keys []placeholder.Key) []output.Key {
 	return k
 }
 
-func itemsToJSON(items []placeholder.Item) []output.Item {
+func compileItems(items []placeholder.Item) []output.Item {
 	r := make([]output.Item, len(items))
 
 	for i := range items {
