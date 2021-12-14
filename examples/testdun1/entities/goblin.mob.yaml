@@ -1,0 +1,7 @@
+type: mob
+link: goblin
+rune: g
+loot:
+  - copper[1~5]
+hp: 10
+mp: 0

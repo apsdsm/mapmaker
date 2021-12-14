@@ -53,7 +53,6 @@ func main() {
 
 	app.Action = func(c *cli.Context) error {
 
-		errors := make([]file.Error, 0, 10)
 		warnings := make([]file.Error, 0, 10)
 
 		// if no make file stop
@@ -73,33 +72,67 @@ func main() {
 
 		fmt.Println("importing map and meta...")
 
-		metaPlaceholders, mapPlaceholders := file.ImportDungeon(mapFile)
+		errors := file.NewErrorList()
 
-		fmt.Println("importing entities...")
+		dungeonImporter := file.NewDungeonImporter(file.DungeonImporterConfig{Errors: errors})
 
-		entityPlaceholders, errors, warnings := file.ImportEntities(entitiesFile, errors, warnings)
+		err = dungeonImporter.Read(mapFile)
 
-		fmt.Println("validating...")
-
-		errors, warnings = file.ValidateDungeon(metaPlaceholders, mapPlaceholders, entityPlaceholders)
-
-		fmt.Println("errors:")
-		fmt.Println(len(errors))
-
-		if len(errors) > 0 {
-			for _, e := range errors {
-				fmt.Println(e)
-			}
-
-			return cli.NewExitError("errors detected. Compilation did not finish.", 1)
+		if err != nil {
+			return cli.NewExitError("error exit on import map", 1)
 		}
 
-		fmt.Println("warnings:")
-		fmt.Println(len(warnings))
+		entityImporter := file.NewEntityImporter(file.EntityImporterConfig{Errors: errors})
 
-		compiled := file.Compile(metaPlaceholders, mapPlaceholders, entityPlaceholders)
+		err = entityImporter.Read(entitiesFile)
 
-		file.Write(compiled, output)
+		if err != nil {
+			return cli.NewExitError("error exit on import entities", 1)
+		}
+
+		dungeonValidator := file.NewDungeonValidator(file.DungeonValidatorConfig{
+			Errors: errors,
+		})
+
+		err = dungeonValidator.Validate(dungeonImporter.Dungeon, entityImporter.Entities)
+
+		if err != nil {
+			return cli.NewExitError("error exit on validate dungeon", 1)
+		}
+
+		compiler := file.NewCompiler(file.CompilerConfig{})
+
+		// if this where it falls over?
+
+		compiler.Compile(dungeonImporter.Dungeon, entityImporter.Entities)
+
+		//metaPlaceholders, mapPlaceholders := file.ImportDungeon(mapFile)
+		//
+		//fmt.Println("importing entities...")
+		//
+		//entityPlaceholders, errors, warnings := file.ImportEntities(entitiesFile, errors, warnings)
+		//
+		//fmt.Println("validating...")
+		//
+		//errors, warnings = file.ValidateDungeon(metaPlaceholders, mapPlaceholders, entityPlaceholders)
+		//
+		//fmt.Println("errors:")
+		//fmt.Println(len(errors))
+		//
+		//if len(errors) > 0 {
+		//	for _, e := range errors {
+		//		fmt.Println(e)
+		//	}
+		//
+		//	return cli.NewExitError("errors detected. Compilation did not finish.", 1)
+		//}
+		//
+		//fmt.Println("warnings:")
+		//fmt.Println(len(warnings))
+		//
+		//compiled := file.Compile(metaPlaceholders, mapPlaceholders, entityPlaceholders)
+		//
+		//file.Write(compiled, output)
 
 		fmt.Println("Done!")
 

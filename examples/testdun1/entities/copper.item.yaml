@@ -1,0 +1,6 @@
+type: item
+link: copper
+name: Copper Coin
+desc: The most common currency in this dungeon.
+size: 1
+uniq: false

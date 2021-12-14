@@ -1,0 +1,20 @@
+---
+link: simple
+name: Simple Map
+desc: simple map with all features.
+---
+
+######################
+#         g          #
+#    s        g      #
+###########1###########
+        #     #        ##
+        #     2          ##
+        #########   g     #
+                ##     ###
+                 #######
+
+---
+g: goblin
+1: door1
+2: door2
